@@ -17,7 +17,7 @@ class GLFWException : G4dException
 {
     this ( string func, string mes, string file = __FILE__, size_t line = __LINE__ )
     {
-        super( "%s: %s".format( func, mes, file, line ) );
+        super( "%s: %s".format( func, mes), file, line );
     }
 }
 
