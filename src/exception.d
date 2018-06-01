@@ -20,3 +20,12 @@ class GLFWException : G4dException
         super( "%s: %s".format( func, mes, file, line ) );
     }
 }
+
+// An exception type for GL errors.
+class GLException : G4dException
+{
+    this ( string func, uint err, string file = __FILE__, size_t line = __LINE__ )
+    {
+        super( "%s: %d".format( func, err ), file, line );
+    }
+}
