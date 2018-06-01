@@ -1,0 +1,21 @@
+{
+	"name": "g4d",
+	"description": "Graphics Library for dlang.",
+
+	"license": "LGPL-3.0",
+	"authors": ["KanzakiKino"],
+	"copyright": "Copyright © 2018, KanzakiKino",
+
+    "platforms": ["posix"],
+
+    "targetName": "g4d",
+    "targetPath": "./bin",
+    "sourcePaths": ["./src"],
+
+    "configurations": [
+        {
+            "name": "default",
+            "targetType": "staticLibrary"
+        }
+    ]
+}
