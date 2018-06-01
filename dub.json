@@ -20,6 +20,11 @@
         {
             "name": "default",
             "targetType": "staticLibrary"
+        },
+        {
+            "name": "unittest",
+            "targetType": "executable",
+            "mainSourceFile": "./test.d"
         }
     ]
 }
