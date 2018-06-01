@@ -3,4 +3,5 @@
 
 public
 {
+    import g4d.exception;
 }
