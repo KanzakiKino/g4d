@@ -1,8 +1,8 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.window;
-import g4d.math.vector,
-       g4d.gl,
+import g4d.gl.lib,
+       g4d.math.vector,
        g4d.glfw;
 import std.conv,
        std.string;
@@ -59,6 +59,7 @@ class Window
     void resetFrame ()
     {
         enforce!glfwMakeContextCurrent( _window );
+        DerelictGL3.reload();
         enforce!glClear( GL_COLOR_BUFFER_BIT );
     }
     void applyFrame ()

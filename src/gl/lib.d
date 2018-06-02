@@ -1,6 +1,6 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
-module g4d.gl;
+module g4d.gl.lib;
 import g4d.exception;
 import std.string;
 public import derelict.opengl3.gl3;
