@@ -4,6 +4,7 @@ module g4d;
 
 public
 {
+    import g4d.math.vector;
     import g4d.exception,
            g4d.window;
 }

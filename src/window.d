@@ -1,9 +1,11 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.window;
-import g4d.gl,
+import g4d.math.vector,
+       g4d.gl,
        g4d.glfw;
-import std.string;
+import std.conv,
+       std.string;
 
 // Window is a class that manages GLFWwindow.
 // Initializing GLFW will be executed automatically if it's necessary.
@@ -30,12 +32,13 @@ class Window
 
     protected GLFWwindow* _window;
 
-    this ( int w, int h, string text)
+    this ( Size sz, string text )
     {
         initLibraries();
         _windowCount++;
 
-        _window = enforce!glfwCreateWindow( w, h, text.toStringz, null, null );
+        _window = enforce!glfwCreateWindow(
+                sz.x.to!int, sz.y.to!int, text.toStringz, null, null );
     }
     ~this ()
     {
@@ -48,9 +51,9 @@ class Window
         _window = null;
     }
 
-    const @property bool alive ()
+    @property bool alive ()
     {
-        return !enforce!glfwWindowShouldClose( cast(GLFWwindow*) _window );
+        return !enforce!glfwWindowShouldClose( _window );
     }
 
     // Clears display and makes current.
