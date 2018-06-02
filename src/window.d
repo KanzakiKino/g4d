@@ -56,13 +56,12 @@ class Window
         return !enforce!glfwWindowShouldClose( _window );
     }
 
-    // Clears display and makes current.
-    void clearDisplay ()
+    void resetFrame ()
     {
         enforce!glfwMakeContextCurrent( _window );
         enforce!glClear( GL_COLOR_BUFFER_BIT );
     }
-    void applyDisplay ()
+    void applyFrame ()
     {
         enforce!glfwSwapBuffers( _window );
     }

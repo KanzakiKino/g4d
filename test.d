@@ -8,7 +8,10 @@ void main ()
     while ( win.alive )
     {
         win.pollEvents();
-        win.clearDisplay();
-        win.applyDisplay();
+        win.resetFrame();
+
+        // Draw something.
+
+        win.applyFrame();
     }
 }
