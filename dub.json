@@ -11,6 +11,7 @@
     "targetName": "g4d",
     "targetPath": "./bin",
     "sourcePaths": ["./src"],
+    "stringImportPaths": ["./src"],
 
     "dependencies": {
         "derelict-gl3": "~>1.0.24",
