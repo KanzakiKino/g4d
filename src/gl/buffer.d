@@ -29,6 +29,12 @@ private abstract class Buffer
             enforce!glBindBuffer( target, _id );
         }
     }
+
+    void assign ( size_t sz, void* ptr, size_t offset = 0 )
+    {
+        bind();
+        enforce!glBufferSubData( target, offset, sz, ptr );
+    }
 }
 
 class ArrayBuffer : Buffer
@@ -49,5 +55,10 @@ class ArrayBuffer : Buffer
     ~this ()
     {
         enforce!glDeleteBuffers( 1, &_id );
+    }
+
+    void assign ( T ) ( T[] buf, size_t offset = 0 )
+    {
+        assign( T.sizeof*buf.length, buf.ptr, offset );
     }
 }
