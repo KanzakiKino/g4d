@@ -39,6 +39,8 @@ class Window
 
         _window = enforce!glfwCreateWindow(
                 sz.x, sz.y, text.toStringz, null, null );
+        enforce!glfwMakeContextCurrent( _window );
+        DerelictGL3.reload();
     }
     ~this ()
     {
