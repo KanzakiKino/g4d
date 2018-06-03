@@ -92,15 +92,13 @@ class Tex2D : Texture
                 bmp.width.to!int, bmp.rows.to!int, 0, format, type, bmp.ptr );
     }
 
-    void overwrite ( B ) ( B bmp, Size offset = Size(0,0) )
+    void overwrite ( B ) ( B bmp, vec2i offset = vec2i(0,0) )
         if ( isBitmap!B )
     {
-        bmp = resizeBitmapPower2( bmp );
-
         bind();
         enum type = toGLType!(B.bitType);
         enum format = toBitmapFormat!B;
         enforce!glTexSubImage2D( target, 0, offset.x.to!int, offset.y.to!int,
-                bmp.width, bmp.rows, format, type, bmp.ptr );
+                bmp.width.to!int, bmp.rows.to!int, format, type, bmp.ptr );
     }
 }
