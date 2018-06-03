@@ -4,7 +4,7 @@ import g4d;
 
 void main ()
 {
-    auto win = new Window( Size(640,480), "hogehoge" );
+    auto win = new Window( vec2i(640,480), "hogehoge" );
     while ( win.alive )
     {
         win.pollEvents();

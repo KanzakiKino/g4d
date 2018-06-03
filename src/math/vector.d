@@ -7,18 +7,18 @@ import std.conv,
 unittest
 {
     import std.algorithm;
-    auto vec2 = Vector!(int,2)( 1, 2 );
-    auto vec3 = Vector!(float,3)( vec2, 0 );
-    assert( equal( vec3.scalars.dup, [1,2,0] ) );
+    auto v2 = Vector!(int,2)( 1, 2 );
+    auto v3 = Vector!(float,3)( v2, 0 );
+    assert( equal( v3.scalars.dup, [1,2,0] ) );
 
-    vec3 += vec2;
-    assert( equal(vec3.scalars.dup, [2,4,0]) );
-    vec3 *= 5;
-    assert( equal(vec3.scalars.dup, [10,20,0]) );
-    assert( equal((vec3-vec2).scalars.dup, [9,18,0]) );
+    v3 += v2;
+    assert( equal(v3.scalars.dup, [2,4,0]) );
+    v3 *= 5;
+    assert( equal(v3.scalars.dup, [10,20,0]) );
+    assert( equal((v3-v2).scalars.dup, [9,18,0]) );
 
-    vec3.z = 5;
-    assert( equal(vec3.scalars.dup, [10,20,5]) );
+    v3.z = 5;
+    assert( equal(v3.scalars.dup, [10,20,5]) );
 
     assert( !isVector!int );
 }
@@ -153,8 +153,10 @@ struct Vector ( Type, ubyte Dimension )
     enum this_is_a_vector_struct_of_g4d = true;
 }
 
-alias Size  = Vector!(float,2);
-alias Point = Vector!(float,3);
+alias vec2i = Vector!(int,2);
+alias vec3i = Vector!(int,3);
+alias vec2  = Vector!(float,2);
+alias vec3  = Vector!(float,3);
 
 // A template that checks whether T is vector.
 enum isVector(T) =

@@ -32,13 +32,13 @@ class Window
 
     protected GLFWwindow* _window;
 
-    this ( Size sz, string text )
+    this ( vec2i sz, string text )
     {
         initLibraries();
         _windowCount++;
 
         _window = enforce!glfwCreateWindow(
-                sz.x.to!int, sz.y.to!int, text.toStringz, null, null );
+                sz.x, sz.y, text.toStringz, null, null );
     }
     ~this ()
     {

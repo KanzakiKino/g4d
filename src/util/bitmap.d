@@ -19,24 +19,24 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
     @property width () { return _width; }
     @property rows () { return _rows; }
 
-    this ( Size sz )
+    this ( vec2i sz )
     {
         resize( sz );
         clear();
     }
-    this ( Size sz, Type* src, size_t srcByte )
+    this ( vec2i sz, Type* src, size_t srcByte )
     {
         this( sz );
         auto copyByte = min( srcByte, Type.sizeof*_bits.length );
         memcpy( ptr, src, copyByte );
     }
-    this ( Size sz, Type[] src )
+    this ( vec2i sz, Type[] src )
     {
         this( sz );
         _bits = src.dup;
     }
 
-    protected void resize ( Size sz )
+    protected void resize ( vec2i sz )
     {
         _width       = sz.x.to!uint;
         _rows        = sz.y.to!uint;

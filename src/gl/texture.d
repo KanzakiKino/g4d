@@ -54,7 +54,7 @@ class Tex2D : Texture
         auto src  = bmp.ptr;
 
         auto dstw   = srcw.nextPower2, dsth = srch.nextPower2;
-        auto result = new B( Size(dstw,dsth) );
+        auto result = new B( vec2i(dstw,dsth) );
         auto dst    = result.ptr;
 
         size_t x = 0, y = 0, i = 0, srci = 0, dsti = 0;
