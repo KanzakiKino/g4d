@@ -16,6 +16,9 @@ void main ()
     auto image = new BitmapRGBAf( vec2i(5,5), pixs );
     auto tex = new Tex2D( image );
 
+    auto image2 = new BitmapAf( vec2i(1,1), [0f] );
+    tex.overwrite( image2, vec2i(1,1) );
+
     auto vertexes = new ArrayBuffer(
             [0f,0f,0f,1f, 0.3f,0f,0f,1f, 0.3f,0.3f,0f,1f, 0f,0.3f,0f,1f] );
     auto rate = 5f/8;
