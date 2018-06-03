@@ -37,6 +37,10 @@ class Window
         initLibraries();
         _windowCount++;
 
+        enforce!glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+        enforce!glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
+        enforce!glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+
         _window = enforce!glfwCreateWindow(
                 sz.x, sz.y, text.toStringz, null, null );
         enforce!glfwMakeContextCurrent( _window );
