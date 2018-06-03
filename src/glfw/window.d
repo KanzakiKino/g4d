@@ -1,9 +1,9 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
-module g4d.window;
+module g4d.glfw.window;
 import g4d.gl.lib,
-       g4d.math.vector,
-       g4d.glfw;
+       g4d.glfw.lib,
+       g4d.math.vector;
 import std.conv,
        std.string;
 
