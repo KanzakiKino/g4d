@@ -21,7 +21,7 @@ void main ()
     auto rate = 5f/8;
     auto uv = new ArrayBuffer( [0f,rate, rate,rate, rate,0f, 0f,0f] );
 
-    auto shader = new RGBA3DShader;
+    auto shader = new RGBAf3DShader;
 
     while ( win.alive )
     {
