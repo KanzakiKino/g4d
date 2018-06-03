@@ -11,15 +11,28 @@ void main ()
         1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f,
         0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f,
         1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f,
-        0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f,
-    ];
+        0f,0f,0f,0f, 1f,0f,0f,1f, 0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f,
+    ]; // There will be a red pixel at bottom of the texture.
     auto image = new BitmapRGBAf( vec2i(5,5), pixs );
     auto tex = new Tex2D( image );
+
+    auto vertexes = new ArrayBuffer(
+            [0f,0f,0f,1f, 0.3f,0f,0f,1f, 0.3f,0.3f,0f,1f, 0f,0.3f,0f,1f] );
+    auto rate = 5f/8;
+    auto uv = new ArrayBuffer( [0f,rate, rate,rate, rate,0f, 0f,0f] );
+
+    auto shader = new RGBA3DShader;
 
     while ( win.alive )
     {
         win.pollEvents();
         win.resetFrame();
+
+        shader.use();
+        shader.uploadPositionBuffer( vertexes );
+        shader.uploadUvBuffer( uv );
+        shader.uploadTexture( tex );
+        shader.drawFan( 4 );
 
         // Draw something.
 

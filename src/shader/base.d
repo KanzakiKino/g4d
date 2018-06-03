@@ -3,6 +3,7 @@
 module g4d.shader.base;
 import g4d.gl.buffer,
        g4d.gl.lib,
+       g4d.gl.texture,
        g4d.exception;
 import std.conv,
        std.string;
@@ -78,6 +79,8 @@ abstract class Shader
     protected void initVertexShader ();
     protected void initFragShader ();
 
+    @property bool textureSupport () { return false; }
+
     void use ()
     {
         enforce!glUseProgram( _program );
@@ -85,6 +88,19 @@ abstract class Shader
     }
 
     void uploadPositionBuffer ( ArrayBuffer );
+    void uploadUvBuffer ( ArrayBuffer )
+    {
+        throw new ShaderException( "This shader doesn't support texture." );
+    }
+    void uploadTexture ( Texture )
+    {
+        throw new ShaderException( "This shader doesn't support texture." );
+    }
+
+    void drawFan ( size_t polyCnt )
+    {
+        enforce!glDrawArrays( GL_TRIANGLE_FAN, 0, polyCnt.to!int );
+    }
 }
 
 // This is an exception type used in shader modules.

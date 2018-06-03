@@ -8,7 +8,7 @@ import g4d.gl.lib,
        g4d.util.bitmap;
 import std.conv;
 
-private abstract class Texture
+abstract class Texture
 {
     protected static Texture _bindedTexture;
 
