@@ -5,7 +5,15 @@ import g4d.ft.lib,
        g4d.math.vector,
        g4d.util.bitmap,
        g4d.exception;
-import std.string;
+import std.conv,
+       std.string;
+
+struct Glyph
+{
+    BitmapA bmp;
+    vec2i   bearing;
+    size_t  advance;
+}
 
 class Font
 {
@@ -37,9 +45,21 @@ class Font
         }
     }
 
-    BitmapA render ( vec2i sz, dchar c )
+    Glyph render ( vec2i sz, dchar c )
     {
-        throw new G4dException( "Not Implemented" );
+        enforce!FT_Set_Pixel_Sizes( _face, sz.x.to!uint, sz.y.to!uint );
+
+        auto index = FT_Get_Char_Index( _face, c );
+        enforce!FT_Load_Glyph( _face, index, FT_LOAD_RENDER );
+
+        auto ftbmp = _face.glyph.bitmap;
+        auto bufsz = ftbmp.width*ftbmp.rows;
+        auto bmp = new BitmapA( vec2i(ftbmp.width,ftbmp.rows), ftbmp.buffer, bufsz );
+
+        auto metrics = _face.glyph.metrics;
+        auto bearing = vec2i( metrics.horiBearingX, metrics.horiBearingY );
+
+        return Glyph( bmp, bearing, metrics.horiAdvance );
     }
 }
 
@@ -57,7 +77,7 @@ class FontFace
         _size = s;
     }
 
-    BitmapA render ( dchar c )
+    Glyph render ( dchar c )
     {
         return _font.render( _size, c );
     }

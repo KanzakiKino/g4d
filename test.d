@@ -6,25 +6,14 @@ void main ()
 {
     auto win = new Window( vec2i(640,480), "hogehoge" );
 
-    float[] pixs = [
-        0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f,
-        1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f,
-        0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f,
-        1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f, 1f,1f,1f,1f,
-        0f,0f,0f,0f, 1f,0f,0f,1f, 0f,0f,0f,0f, 1f,1f,1f,1f, 0f,0f,0f,0f,
-    ]; // There will be a red pixel at bottom of the texture.
-    auto image = new BitmapRGBAf( vec2i(5,5), pixs );
-    auto tex = new Tex2D( image );
-
-    auto image2 = new BitmapAf( vec2i(1,1), [0f] );
-    tex.overwrite( image2, vec2i(1,1) );
+    auto font  = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );
+    auto face  = new FontFace( font, vec2i(16,16) );
+    auto image = face.render('A').bmp;
+    auto tex   = new Tex2D( image );
 
     auto vertexes = new ArrayBuffer(
-            [0f,0f,0f,1f, 0.3f,0f,0f,1f, 0.3f,0.3f,0f,1f, 0f,0.3f,0f,1f] );
-    auto rate = 5f/8;
-    auto uv = new ArrayBuffer( [0f,rate, rate,rate, rate,0f, 0f,0f] );
-
-    auto font = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );
+            [0f,0f,0f,1f, 0.1f,0f,0f,1f, 0.1f,0.1f,0f,1f, 0f,0.1f,0f,1f] );
+    auto uv = new ArrayBuffer( [0f,1f, 1f,1f, 1f,0f, 0f,0f] );
 
     auto shader = new RGBAf3DShader;
 
