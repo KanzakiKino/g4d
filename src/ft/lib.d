@@ -1,6 +1,7 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.ft.lib;
+import g4d.exception;
 import std.string;
 public import derelict.freetype.ft;
 

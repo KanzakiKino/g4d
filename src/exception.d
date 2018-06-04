@@ -29,3 +29,12 @@ class GLException : G4dException
         super( "%s: %d".format( func, err ), file, line );
     }
 }
+
+// An exception type for FT errors.
+class FTException : G4dException
+{
+    this ( string func, int err, string file = __FILE__, size_t line = __LINE__ )
+    {
+        super( "%s: %d".format( func, err ), file, line );
+    }
+}
