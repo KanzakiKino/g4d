@@ -155,8 +155,10 @@ struct Vector ( Type, ubyte Dimension )
 
 alias vec2i = Vector!(int,2);
 alias vec3i = Vector!(int,3);
+alias vec4i = Vector!(int,4);
 alias vec2  = Vector!(float,2);
 alias vec3  = Vector!(float,3);
+alias vec4  = Vector!(float,4);
 
 // A template that checks whether T is vector.
 enum isVector(T) =

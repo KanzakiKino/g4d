@@ -21,7 +21,7 @@ template FillFragShader ()
         _colorLoc = getUniformLoc( "color" );
     }
 
-    @property void color ( Vector!(float,4) col )
+    @property void color ( vec4 col )
     {
         enforce!glUniform4f( _colorLoc, col.r, col.g, col.b, col.a );
     }
