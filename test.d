@@ -15,7 +15,7 @@ void main ()
             [0f,0f,0f,1f, 0.1f,0f,0f,1f, 0.1f,0.1f,0f,1f, 0f,0.1f,0f,1f] );
     auto uv = new ArrayBuffer( [0f,1f, 1f,1f, 1f,0f, 0f,0f] );
 
-    auto shader = new RGBAf3DShader;
+    auto shader = new Alphaf3DShader;
 
     while ( win.alive )
     {
@@ -25,6 +25,7 @@ void main ()
         shader.use();
         shader.uploadPositionBuffer( vertexes );
         shader.uploadUvBuffer( uv );
+        shader.color = vec4( 1,1,1,1 );
         shader.uploadTexture( tex );
         shader.drawFan( 4 );
 

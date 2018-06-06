@@ -85,6 +85,9 @@ abstract class Shader
     {
         enforce!glUseProgram( _program );
         enforce!glBindVertexArray( _vao );
+
+        enforce!glEnable( GL_BLEND );
+        enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     }
 
     void uploadPositionBuffer ( ArrayBuffer );
