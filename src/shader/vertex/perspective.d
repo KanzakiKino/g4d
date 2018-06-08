@@ -7,25 +7,33 @@ enum PerspectiveVertexShaderSource = import("shader/vertex/perspective.glsl");
 template PerspectiveVertexShader ()
 {
     import g4d.gl.buffer,
-           g4d.gl.lib;
+           g4d.gl.lib,
+           g4d.math.matrix;
 
     override const pure @property string vertexSource ()
     {
         return PerspectiveVertexShaderSource;
     }
 
+    protected GLint _matrixLoc;
     protected GLint _posLoc;
     protected GLint _uvLoc;
 
     protected override void initVertexShader ()
     {
-        _posLoc = getAttribLoc( "pos" );
-        _uvLoc  = getAttribLoc( "uv" );
+        _matrixLoc = getUniformLoc( "matrix" );
+        _posLoc    = getAttribLoc( "pos" );
+        _uvLoc     = getAttribLoc( "uv" );
     }
 
     override @property bool textureSupport ()
     {
         return _uvLoc >= 0;
+    }
+
+    override @property void matrix ( mat4 m )
+    {
+        enforce!glUniformMatrix4fv( _matrixLoc, 1, GL_FALSE, m.ptr );
     }
 
     override void uploadPositionBuffer ( ArrayBuffer buf )

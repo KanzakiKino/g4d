@@ -12,6 +12,7 @@ void main ()
     textElm.appendText( "hoge"d, face );
 
     auto shader = new Alphaf3DShader;
+    shader.matrix = mat4.transform( 1f/320f, 1f/240f, 1f );
 
     while ( win.alive )
     {

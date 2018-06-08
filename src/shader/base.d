@@ -4,6 +4,7 @@ module g4d.shader.base;
 import g4d.gl.buffer,
        g4d.gl.lib,
        g4d.gl.texture,
+       g4d.math.matrix,
        g4d.exception;
 import std.conv,
        std.string;
@@ -58,6 +59,9 @@ abstract class Shader
         initFragShader();
 
         enforce!glGenVertexArrays( 1, &_vao );
+
+        use();
+        matrix = mat4.identity;
     }
     ~this ()
     {
@@ -89,6 +93,8 @@ abstract class Shader
         enforce!glEnable( GL_BLEND );
         enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     }
+
+    @property void matrix ( mat4 );
 
     void uploadPositionBuffer ( ArrayBuffer );
     void uploadUvBuffer ( ArrayBuffer )
