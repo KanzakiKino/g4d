@@ -6,20 +6,11 @@ import std.conv,
 
 unittest
 {
-    auto identity = mat4([
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-    ]);
+    auto identity = mat4.identity;
     assert( (identity*mat1x4([1,2,3,1])).aa == 1f );
-    auto translate = mat4([
-        1, 0, 0, 1,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-    ]);
-    assert( (translate*mat1x4([1,2,3,1])).aa == 2f );
+
+    auto translate = mat4.translate(10,10,0);
+    assert( (translate*mat1x4([1,2,3,1])).aa == 11f );
 }
 
 // This is a struct of matrix.
@@ -65,7 +56,7 @@ struct Matrix ( Type, ubyte DimX, ubyte DimY )
         }
     }
 
-    protected Type[DimX][DimY] _scalars;
+    protected Type[DimY][DimX] _scalars;
     const @property scalars () { return _scalars; }
     const @property ptr () { return &_scalars[0][0]; }
 
@@ -73,9 +64,9 @@ struct Matrix ( Type, ubyte DimX, ubyte DimY )
     {
         static foreach ( i; 0..(DimX*DimY) ) {
             if ( mat.length > i ) {
-                _scalars[i/DimX][i%DimX] = mat[i];
+                _scalars[i%DimX][i/DimX] = mat[i];
             } else {
-                _scalars[i/DimX][i%DimX] = 0;
+                _scalars[i%DimX][i/DimX] = 0;
             }
         }
     }
@@ -84,7 +75,7 @@ struct Matrix ( Type, ubyte DimX, ubyte DimY )
     protected ref get ( ubyte x, ubyte y ) ()
         if ( x < DimX && y < DimY )
     {
-        return _scalars[y][x];
+        return _scalars[x][y];
     }
 
     static if ( DimX >= 1 )
