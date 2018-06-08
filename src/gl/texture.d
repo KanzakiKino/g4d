@@ -12,14 +12,18 @@ abstract class Texture
 {
     protected static Texture _bindedTexture;
 
-    protected GLuint _id;
-    @property id () { return _id; }
+    const GLuint id;
+    const vec2i  size;
 
     const pure @property GLenum target ();
 
-    this ()
+    this ( vec2i sz )
     {
-        enforce!glGenTextures( 1, &_id );
+        size = sz;
+
+        GLuint temp;
+        enforce!glGenTextures( 1, &temp );
+        id = temp;
         bind();
 
         enforce!glTexParameteri( target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -27,7 +31,7 @@ abstract class Texture
     }
     ~this ()
     {
-        enforce!glDeleteTextures( 1, &_id );
+        enforce!glDeleteTextures( 1, &id );
     }
 
     const @property binded ()
@@ -37,7 +41,7 @@ abstract class Texture
     void bind ()
     {
         if ( !binded ) {
-            enforce!glBindTexture( target, _id );
+            enforce!glBindTexture( target, id );
             _bindedTexture = this;
         }
     }
@@ -84,7 +88,7 @@ class Tex2D : Texture
     {
         bmp = resizeBitmapPower2( bmp );
 
-        super();
+        super( vec2i( bmp.width, bmp.rows ) );
         enum type = toGLType!(B.bitType);
         enum format = toBitmapFormat!B;
 
