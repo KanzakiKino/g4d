@@ -8,12 +8,8 @@ void main ()
 
     auto font  = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );
     auto face  = new FontFace( font, vec2i(16,16) );
-    auto image = face.render('A').bmp;
-    auto tex   = new Tex2D( image );
-
-    auto vertexes = new ArrayBuffer(
-            [0f,0f,0f,1f, 0.1f,0f,0f,1f, 0.1f,0.1f,0f,1f, 0f,0.1f,0f,1f] );
-    auto uv = new ArrayBuffer( [0f,1f, 1f,1f, 1f,0f, 0f,0f] );
+    auto textElm = new HTextElement;
+    textElm.appendText( "hoge"d, face );
 
     auto shader = new Alphaf3DShader;
 
@@ -23,11 +19,8 @@ void main ()
         win.resetFrame();
 
         shader.use();
-        shader.uploadPositionBuffer( vertexes );
-        shader.uploadUvBuffer( uv );
-        shader.color = vec4( 1,1,1,1 );
-        shader.uploadTexture( tex );
-        shader.drawFan( 4 );
+        shader.color = vec4(1,1,1,1);
+        textElm.draw( shader );
 
         // Draw something.
 
