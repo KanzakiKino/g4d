@@ -74,21 +74,21 @@ class HTextElement : Element
         assert( _texture );
         auto texSize = vec2(_texture.size);
 
-        float  curpos = 0;
+        float  curpos   = 0;
         size_t curuvpos = 0;
         foreach ( g; _glyphs ) {
             CharPoly poly;
             float left   = curpos + g.bearing.x;
-            float top    = -g.bearing.y;
+            float top    = g.bearing.y;
             float right  = left + g.bmp.width;
-            float bottom = top + g.bmp.rows;
+            float bottom = top - g.bmp.rows;
             poly.pos = new ArrayBuffer([
                 left,top,0f,1f, right,top,0f,1f, right,bottom,0f,1f, left,bottom,0f,1f
             ]);
 
-            left  = curuvpos / texSize.x;
-            top   = 0;
-            right = (curuvpos + g.bmp.width) / texSize.x;
+            left   = curuvpos / texSize.x;
+            top    = 0;
+            right  = (curuvpos + g.bmp.width) / texSize.x;
             bottom = g.bmp.rows / texSize.y;
             poly.uv = new ArrayBuffer([
                 left,top, right,top, right,bottom, left,bottom
