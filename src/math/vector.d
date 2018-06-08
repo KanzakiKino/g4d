@@ -1,6 +1,7 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.math.vector;
+import g4d.math.matrix;
 import std.conv,
        std.traits;
 
@@ -19,6 +20,8 @@ unittest
 
     v3.z = 5;
     assert( equal(v3.scalars.dup, [10,20,5]) );
+
+    assert( v3.toMatrix.aa == 10 );
 
     assert( !isVector!int );
 }
@@ -88,6 +91,10 @@ struct Vector ( Type, ubyte Dimension )
     string toString ()
     {
         return scalars.to!string;
+    }
+    auto toMatrix ()
+    {
+        return Matrix!(Type,1,Dimension)( _scalars );
     }
 
     protected void plus ( T ) ( T rhs )

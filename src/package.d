@@ -9,7 +9,8 @@ public
     import g4d.gl.buffer,
            g4d.gl.texture;
     import g4d.glfw.window;
-    import g4d.math.vector;
+    import g4d.math.matrix,
+           g4d.math.vector;
     import g4d.shader.alphaf3d,
            g4d.shader.fill3d,
            g4d.shader.rgbaf3d;
