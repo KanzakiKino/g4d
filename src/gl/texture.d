@@ -99,6 +99,8 @@ class Tex2D : Texture
     void overwrite ( B ) ( B bmp, vec2i offset = vec2i(0,0) )
         if ( isBitmap!B )
     {
+        bmp = resizeBitmapPower2( bmp );
+
         bind();
         enum type = toGLType!(B.bitType);
         enum format = toBitmapFormat!B;
