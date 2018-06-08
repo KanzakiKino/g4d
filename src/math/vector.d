@@ -31,8 +31,8 @@ struct Vector ( Type, ubyte Dimension )
     alias type      = Type;
 
     protected Type[Dimension] _scalars;
-    @property scalars () { return _scalars; }
-    @property ptr () { return _scalars.ptr; }
+    const @property scalars () { return _scalars; }
+    const @property ptr () { return _scalars.ptr; }
 
     this ( Args... ) ( Args args )
     {
@@ -54,7 +54,7 @@ struct Vector ( Type, ubyte Dimension )
                 _scalars[index++] = arg.to!Type;
 
             } else static if ( isVector!(typeof(arg)) ) {
-                assert( index+arg.dimension < Dimension, Msg.TooManyScalar );
+                assert( index+arg.dimension-1 < Dimension, Msg.TooManyScalar );
                 foreach ( scalar; arg.scalars ) {
                     _scalars[index++] = scalar.to!Type;
                 }
