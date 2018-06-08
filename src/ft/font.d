@@ -57,9 +57,9 @@ class Font
         auto bmp = new BitmapA( vec2i(ftbmp.width,ftbmp.rows), ftbmp.buffer, bufsz );
 
         auto metrics = _face.glyph.metrics;
-        auto bearing = vec2i( metrics.horiBearingX, metrics.horiBearingY );
+        auto bearing = vec2i( metrics.horiBearingX/64, metrics.horiBearingY/64 );
 
-        return Glyph( bmp, bearing, metrics.horiAdvance );
+        return Glyph( bmp, bearing, metrics.horiAdvance/64 );
     }
 }
 
