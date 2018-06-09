@@ -22,6 +22,7 @@ unittest
     assert( equal(v3.scalars.dup, [10,20,5]) );
 
     assert( v3.toMatrix.aa == 10 );
+    assert( equal(vec4(mat1x4([1,2,3,4])).scalars.dup, [1,2,3,4]) );
 
     assert( !isVector!int );
 }
@@ -60,6 +61,12 @@ struct Vector ( Type, ubyte Dimension )
                 assert( index+arg.dimension-1 < Dimension, Msg.TooManyScalar );
                 foreach ( scalar; arg.scalars ) {
                     _scalars[index++] = scalar.to!Type;
+                }
+
+            } else static if ( isMatrix!(typeof(arg)) && arg.dimX == 1 && arg.dimY == Dimension ) {
+                assert( index == 0, Msg.TooManyScalar );
+                static foreach ( i; 0..Dimension ) {
+                    _scalars[index++] = arg.scalars[0][i];
                 }
 
             } else {
