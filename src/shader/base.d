@@ -5,6 +5,7 @@ import g4d.gl.buffer,
        g4d.gl.lib,
        g4d.gl.texture,
        g4d.math.matrix,
+       g4d.math.vector,
        g4d.exception;
 import std.conv,
        std.string;
@@ -33,6 +34,10 @@ abstract class Shader
     protected GLuint _program;
     protected GLuint _vao;
 
+    protected vec3 _transform;
+    protected vec3 _translate;
+    protected mat4 _projection;
+
     const pure @property string vertexSource ();
     const pure @property string fragSource ();
 
@@ -59,9 +64,12 @@ abstract class Shader
         initFragShader();
 
         enforce!glGenVertexArrays( 1, &_vao );
-
         use();
-        matrix = mat4.identity;
+
+        _transform  = vec3(0,0,0);
+        _translate  = vec3(1,1,1);
+        _projection = mat4.identity;
+        applyMatrix();
     }
     ~this ()
     {
@@ -94,7 +102,10 @@ abstract class Shader
         enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     }
 
-    @property void matrix ( mat4 );
+    @property void matrix     ( mat4 );
+    @property ref  transform  () { return _transform; }
+    @property ref  translate  () { return _translate; }
+    @property ref  projection () { return _projection; }
 
     void uploadPositionBuffer ( ArrayBuffer );
     void uploadUvBuffer ( ArrayBuffer )
@@ -106,6 +117,12 @@ abstract class Shader
         throw new ShaderException( "This shader doesn't support texture." );
     }
 
+    void applyMatrix ()
+    {
+        auto translate = mat4.translate( _translate.x, _translate.y, _translate.z );
+        auto transform = mat4.transform( _transform.x, _transform.y, _transform.z );
+        matrix = _projection*translate*transform;
+    }
     void drawFan ( size_t polyCnt )
     {
         enforce!glDrawArrays( GL_TRIANGLE_FAN, 0, polyCnt.to!int );
