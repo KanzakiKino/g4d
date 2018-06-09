@@ -26,6 +26,8 @@ class HTextElement : Element
     protected Texture    _texture;
     protected CharPoly[] _polys;
 
+    protected vec2 _sizeLimit;
+
     this ()
     {
         clear();
@@ -36,9 +38,11 @@ class HTextElement : Element
         _glyphs  = [];
         _texture = null;
         _polys   = [];
+
+        _sizeLimit = vec2(0,0);
     }
 
-    const @property isFixed () { return !!_texture; }
+    const @property isFixed () { return !!_polys.length; }
 
     protected void appendChar ( dchar c, FontFace font )
     {
@@ -54,10 +58,18 @@ class HTextElement : Element
         }
     }
 
+    // Limits size of text. (It's necessary for applying to clear.)
+    void limitSize ( vec2 sz )
+    {
+        _sizeLimit = sz;
+    }
+
+    // Creates a texture that is drawn all characters.
     protected Texture createTexture ()
     {
-        assert( _glyphs.length );
-
+        if ( !_glyphs.length ) {
+            return null;
+        }
         auto w = _glyphs.map!( x => x.bmp.width ).sum;
         auto h = _glyphs.map!( x => x.bmp.rows  ).maxElement;
 
@@ -69,40 +81,61 @@ class HTextElement : Element
         }
         return result;
     }
-    protected void createPolys ()
+    // Creates poly from glyph and other parameters.
+    protected CharPoly createPolyFromGlyph ( vec2 pos, size_t uvLeft, Glyph g, vec2 texSize )
     {
-        assert( _texture );
-        auto texSize = vec2(_texture.size);
-
-        float  curpos   = 0;
-        size_t curuvpos = 0;
-        foreach ( g; _glyphs ) {
-            CharPoly poly;
-            float left   = curpos + g.bearing.x;
-            float top    = g.bearing.y;
-            float right  = left + g.bmp.width;
-            float bottom = top - g.bmp.rows;
-            poly.pos = new ArrayBuffer([
+        CharPoly poly;
+        float left   = pos.x + g.bearing.x;
+        float top    = pos.y + g.bearing.y;
+        float right  = left + g.bmp.width;
+        float bottom = top - g.bmp.rows;
+        poly.pos = new ArrayBuffer([
                 left,top,0f,1f, right,top,0f,1f, right,bottom,0f,1f, left,bottom,0f,1f
-            ]);
+        ]);
 
-            left   = curuvpos / texSize.x;
-            top    = 0;
-            right  = (curuvpos + g.bmp.width) / texSize.x;
-            bottom = g.bmp.rows / texSize.y;
-            poly.uv = new ArrayBuffer([
+        left   = uvLeft / texSize.x;
+        top    = 0;
+        right  = (uvLeft+g.bmp.width) / texSize.x;
+        bottom = g.bmp.rows / texSize.y;
+        poly.uv = new ArrayBuffer([
                 left,top, right,top, right,bottom, left,bottom
-            ]);
+        ]);
+        return poly;
+    }
+    // Creates polygons from glyphs and adds it.
+    protected void generatePolys ()
+    {
+        assert( _texture && !isFixed );
 
-            curpos   += g.advance;
-            curuvpos += g.bmp.width;
-            _polys ~= poly;
+        auto   texSize    = vec2(_texture.size);
+        vec2   pos        = vec2i(0,0);
+        size_t uvLeft     = 0;
+        size_t lineHeight = 0;
+
+        foreach ( g; _glyphs ) {
+            if ( _sizeLimit.x > 0 && pos.x+g.advance > _sizeLimit.x ) {
+                pos.x  = 0;
+                pos.y -= lineHeight;
+                if ( _sizeLimit.y > 0 && -pos.y > _sizeLimit.y ) {
+                    break;
+                }
+                lineHeight = 0;
+            }
+            _polys ~= createPolyFromGlyph( pos, uvLeft, g, texSize );
+
+            pos.x      += g.advance;
+            uvLeft     += g.bmp.width;
+            lineHeight  = max( lineHeight, g.bmp.rows );
         }
     }
     protected void fix ()
     {
+        assert( !isFixed );
+
         _texture = createTexture();
-        createPolys();
+        if ( _texture ) {
+            generatePolys();
+        }
         _glyphs  = [];
     }
 
@@ -111,7 +144,7 @@ class HTextElement : Element
         if ( _glyphs.length ) {
             fix();
         }
-        if ( _polys.length <= 0 ) {
+        if ( !_polys.length ) {
             return;
         }
 
