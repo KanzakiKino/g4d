@@ -36,7 +36,7 @@ private abstract class Buffer
         }
     }
 
-    protected void overwrite ( size_t sz, void* ptr, size_t offset = 0 )
+    protected void overwrite ( size_t sz, const void* ptr, size_t offset = 0 )
     {
         bind();
         enforce!glBufferSubData( target, offset, sz, ptr );
@@ -58,6 +58,6 @@ class ArrayBuffer : Buffer
 
     void overwrite ( T ) ( T[] buf, size_t offset = 0 )
     {
-        super.overwrite( T.sizeof*buf.length, buf.ptr, offset );
+        super.overwrite( T.sizeof*buf.length, buf.ptr, T.sizeof*offset );
     }
 }
