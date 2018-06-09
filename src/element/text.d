@@ -27,11 +27,15 @@ class HTextElement : Element
     protected CharPoly[] _polys;
     protected size_t     _firstLineHeight;
 
-    protected vec2 _sizeLimit;
+    vec2  maxSize;
+    float lineHeightMag;
 
     this ()
     {
         clear();
+
+        maxSize       = vec2(0,0);
+        lineHeightMag = 1;
     }
 
     override void clear ()
@@ -39,8 +43,6 @@ class HTextElement : Element
         _glyphs  = [];
         _texture = null;
         _polys   = [];
-
-        _sizeLimit = vec2(0,0);
     }
 
     const @property isFixed () { return !!_polys.length; }
@@ -57,12 +59,6 @@ class HTextElement : Element
         foreach ( c; text ) {
             appendChar( c, font );
         }
-    }
-
-    // Limits size of text. (It's necessary for applying to clear.)
-    void limitSize ( vec2 sz )
-    {
-        _sizeLimit = sz;
     }
 
     // Creates a texture that is drawn all characters.
@@ -115,13 +111,13 @@ class HTextElement : Element
         size_t lineHeight = 0;
 
         foreach ( g; _glyphs ) {
-            if ( _sizeLimit.x > 0 && pos.x+g.advance > _sizeLimit.x ) {
+            if ( maxSize.x > 0 && pos.x+g.advance > maxSize.x ) {
                 pos.x  = 0;
                 pos.y -= lineHeight;
                 if ( !_firstLineHeight ) {
                     _firstLineHeight = lineHeight;
                 }
-                if ( _sizeLimit.y > 0 && -pos.y > _sizeLimit.y ) {
+                if ( maxSize.y > 0 && -pos.y > maxSize.y ) {
                     break;
                 }
                 lineHeight = 0;
@@ -130,7 +126,7 @@ class HTextElement : Element
 
             pos.x      += g.advance;
             uvLeft     += g.bmp.width;
-            lineHeight  = max( lineHeight, g.bmp.rows );
+            lineHeight  = max( lineHeight, g.bmp.rows*lineHeightMag ).to!size_t;
         }
     }
     protected void fix ()
