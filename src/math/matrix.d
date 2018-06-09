@@ -68,6 +68,23 @@ struct Matrix ( Type, ubyte DimX, ubyte DimY )
                 ]);
                 return xmat*ymat*zmat;
             }
+
+            // left,right,top,bottom,near,far
+            static orthographic ( float l, float r, float t, float b, float n, float f )
+            {
+                auto rPl = r+l;
+                auto rMl = r-l;
+                auto tPb = t+b;
+                auto tMb = t-b;
+                auto fPn = f+n;
+                auto fMn = f-n;
+                return typeof(this)([
+                    2f/rMl,      0,        0, -rPl/rMl,
+                         0, 2f/tMb,        0, -tPb/tMb,
+                         0,      0,   2f/fMn, -fPn/fMn,
+                         0,      0,        0,        1,
+                ]);
+            }
         }
         static @property identity ()
         {
