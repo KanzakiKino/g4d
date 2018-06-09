@@ -66,7 +66,7 @@ class Window
     {
         enforce!glfwMakeContextCurrent( _window );
         DerelictGL3.reload();
-        enforce!glClear( GL_COLOR_BUFFER_BIT );
+        enforce!glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     }
     void applyFrame ()
     {

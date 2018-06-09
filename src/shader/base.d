@@ -102,6 +102,8 @@ abstract class Shader
 
         enforce!glEnable( GL_BLEND );
         enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+        enforce!glEnable( GL_DEPTH_TEST );
     }
 
     @property void matrix     ( mat4 );
