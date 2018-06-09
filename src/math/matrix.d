@@ -2,6 +2,7 @@
 // Copyright 2018 KanzakiKino
 module g4d.math.matrix;
 import std.conv,
+       std.math,
        std.traits;
 
 unittest
@@ -44,6 +45,28 @@ struct Matrix ( Type, ubyte DimX, ubyte DimY )
                     0, 0, z, 0,
                     0, 0, 0, 1,
                 ]);
+            }
+            static rotation ( Type x, Type y, Type z )
+            {
+                auto xmat = typeof(this)([
+                    1,      0,       0, 0,
+                    0, cos(x), -sin(x), 0,
+                    0, sin(x),  cos(x), 0,
+                    0,      0,       0, 1,
+                ]);
+                auto ymat = typeof(this)([
+                     cos(y), 0, sin(y), 0,
+                          0, 1,      0, 0,
+                    -sin(y), 0, cos(y), 0,
+                          0, 0,      0, 1,
+                ]);
+                auto zmat = typeof(this)([
+                     cos(z), -sin(z), 0, 0,
+                     sin(z),  cos(z), 0, 0,
+                          0,       0, 1, 0,
+                          0,       0, 0, 1,
+                ]);
+                return xmat*ymat*zmat;
             }
         }
         static @property identity ()

@@ -35,6 +35,7 @@ abstract class Shader
     protected GLuint _vao;
 
     protected vec3 _transform;
+    protected vec3 _rotation;
     protected vec3 _translate;
     protected mat4 _projection;
 
@@ -103,8 +104,9 @@ abstract class Shader
     }
 
     @property void matrix     ( mat4 );
-    @property ref  transform  () { return _transform; }
-    @property ref  translate  () { return _translate; }
+    @property ref  transform  () { return _transform;  }
+    @property ref  rotation   () { return _rotation;   }
+    @property ref  translate  () { return _translate;  }
     @property ref  projection () { return _projection; }
 
     void uploadPositionBuffer ( ArrayBuffer );
@@ -120,8 +122,9 @@ abstract class Shader
     void applyMatrix ()
     {
         auto translate = mat4.translate( _translate.x, _translate.y, _translate.z );
+        auto rotation  = mat4.rotation ( _rotation.x, _rotation.y, _rotation.z );
         auto transform = mat4.transform( _transform.x, _transform.y, _transform.z );
-        matrix = _projection*translate*transform;
+        matrix = _projection*translate*rotation*transform;
     }
     void drawFan ( size_t polyCnt )
     {

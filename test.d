@@ -16,6 +16,7 @@ void main ()
 
     auto shader       = new Alphaf3DShader;
     shader.color      = vec4(1,0.5,1,0.7);
+    shader.rotation   = vec3(0f,0f,0f);
     shader.projection = mat4.transform( 1f/320f, 1f/240f, 1f );
 
     while ( win.alive )
