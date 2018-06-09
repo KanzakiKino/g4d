@@ -4,7 +4,8 @@ module g4d;
 
 public
 {
-    import g4d.element.text;
+    import g4d.element.shape.regular,
+           g4d.element.text;
     import g4d.ft.font;
     import g4d.gl.buffer,
            g4d.gl.texture;
