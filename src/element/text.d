@@ -25,6 +25,7 @@ class HTextElement : Element
     protected Glyph[]    _glyphs;
     protected Texture    _texture;
     protected CharPoly[] _polys;
+    protected size_t     _firstLineHeight;
 
     protected vec2 _sizeLimit;
 
@@ -106,6 +107,7 @@ class HTextElement : Element
     protected void generatePolys ()
     {
         assert( _texture && !isFixed );
+        _firstLineHeight = 0;
 
         auto   texSize    = vec2(_texture.size);
         vec2   pos        = vec2i(0,0);
@@ -116,6 +118,9 @@ class HTextElement : Element
             if ( _sizeLimit.x > 0 && pos.x+g.advance > _sizeLimit.x ) {
                 pos.x  = 0;
                 pos.y -= lineHeight;
+                if ( !_firstLineHeight ) {
+                    _firstLineHeight = lineHeight;
+                }
                 if ( _sizeLimit.y > 0 && -pos.y > _sizeLimit.y ) {
                     break;
                 }
@@ -147,6 +152,9 @@ class HTextElement : Element
         if ( !_polys.length ) {
             return;
         }
+
+        s.translate.y -= _firstLineHeight;
+        s.applyMatrix();
 
         s.uploadTexture( _texture );
         foreach ( poly; _polys ) {
