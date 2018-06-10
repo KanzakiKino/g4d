@@ -18,7 +18,7 @@ void main ()
     auto ngon = new RectElement;
     ngon.resize( vec2(300,200) );
 
-    auto textShader       = new Alphaf3DShader;
+    auto textShader       = new Alpha3DShader;
     textShader.color      = vec4(1,1,1,1);
     textShader.projection = mat4.orthographic( -320f, 320f, 240f, -240f, short.min, short.max );
 

@@ -1,10 +1,10 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2019 KanzakiKino
-module g4d.shader.vertex.perspective;
+module g4d.shader.vertex.threedim;
 
-enum PerspectiveVertexShaderSource = import("shader/vertex/perspective.glsl");
+enum ThreeDimVertexShaderSource = import("shader/vertex/threedim.glsl");
 
-template PerspectiveVertexShader ()
+template ThreeDimVertexShader ()
 {
     import g4d.gl.buffer,
            g4d.gl.lib,
@@ -12,7 +12,7 @@ template PerspectiveVertexShader ()
 
     override const pure @property string vertexSource ()
     {
-        return PerspectiveVertexShaderSource;
+        return ThreeDimVertexShaderSource;
     }
 
     protected GLint _matrixLoc;

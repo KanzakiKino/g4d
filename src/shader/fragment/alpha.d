@@ -1,10 +1,10 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
-module g4d.shader.fragment.alphaf;
+module g4d.shader.fragment.alpha;
 
-enum AlphafFragShaderSource = import("shader/fragment/alphaf.glsl");
+enum AlphaFragShaderSource = import("shader/fragment/alpha.glsl");
 
-template AlphafFragShader ()
+template AlphaFragShader ()
 {
     import g4d.gl.lib,
            g4d.gl.texture,
@@ -12,7 +12,7 @@ template AlphafFragShader ()
 
     override const pure @property string fragSource ()
     {
-        return AlphafFragShaderSource;
+        return AlphaFragShaderSource;
     }
 
     protected GLint _imageLoc;

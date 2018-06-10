@@ -1,10 +1,10 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
-module g4d.shader.fragment.rgbaf;
+module g4d.shader.fragment.rgba;
 
-enum RGBAfFragShaderSource = import("shader/fragment/rgbaf.glsl");
+enum RGBAFragShaderSource = import("shader/fragment/rgba.glsl");
 
-template RGBAfFragShader ()
+template RGBAFragShader ()
 {
     import g4d.gl.lib,
            g4d.gl.texture,
@@ -12,7 +12,7 @@ template RGBAfFragShader ()
 
     override const pure @property string fragSource ()
     {
-        return RGBAfFragShaderSource;
+        return RGBAFragShaderSource;
     }
 
     protected GLint _imageLoc;
