@@ -2,6 +2,7 @@
 // Copyright 2018 KanzakiKino
 module g4d.glfw.window;
 import g4d.gl.lib,
+       g4d.glfw.handler,
        g4d.glfw.lib,
        g4d.math.vector;
 import std.conv,
@@ -31,6 +32,7 @@ class Window
     }
 
     protected GLFWwindow* _window;
+    EventHandler handler;
 
     this ( vec2i sz, string text )
     {
@@ -43,6 +45,8 @@ class Window
 
         _window = enforce!glfwCreateWindow(
                 sz.x, sz.y, text.toStringz, null, null );
+        handler = EventHandler( _window );
+
         enforce!glfwMakeContextCurrent( _window );
         DerelictGL3.reload();
     }
