@@ -5,7 +5,12 @@ import std.math;
 
 void main ()
 {
+    vec2 pos;
     auto win = new Window( vec2i(640,480), "hogehoge" );
+    win.handler.onWindowMove = delegate void ( vec2i sz ) nothrow
+    {
+        pos = vec2( sz.x-240, -sz.y+240 );
+    };
 
     auto font = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );
     auto face = new FontFace( font, vec2i(16,16) );
@@ -35,7 +40,7 @@ void main ()
         win.resetFrame();
 
         fillShader.use();
-        fillShader.translate = vec3(0,0,500);
+        fillShader.translate = vec3(pos,500);
         ngon.draw( fillShader );
 
         textShader.use();
