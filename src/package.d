@@ -10,7 +10,8 @@ public
     import g4d.ft.font;
     import g4d.gl.buffer,
            g4d.gl.texture;
-    import g4d.glfw.window;
+    import g4d.glfw.type,
+           g4d.glfw.window;
     import g4d.math.matrix,
            g4d.math.vector;
     import g4d.shader.alpha3d,

@@ -5,11 +5,17 @@ import std.math;
 
 void main ()
 {
-    vec2 pos;
+    vec2 pos = vec2(0,0); bool clicking = false;
     auto win = new Window( vec2i(640,480), "hogehoge" );
-    win.handler.onWindowMove = delegate void ( vec2i sz ) nothrow
+    win.handler.onMouseMove = delegate void ( vec2 sz ) nothrow
     {
         pos = vec2( sz.x-240, -sz.y+240 );
+    };
+    win.handler.onMouseButton = delegate void ( MouseButton b, bool toggle )
+    {
+        if ( b == MouseButton.Left ) {
+            clicking = toggle;
+        }
     };
 
     auto font = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );
@@ -24,7 +30,6 @@ void main ()
     ngon.resize( vec2(300,200) );
 
     auto textShader       = new Alpha3DShader;
-    textShader.color      = vec4(1,1,1,1);
     textShader.projection = mat4.orthographic( -320f, 320f, 240f, -240f, short.min, short.max );
 
     auto fillShader       = new Fill3DShader;
@@ -44,6 +49,7 @@ void main ()
         ngon.draw( fillShader );
 
         textShader.use();
+        textShader.color     = clicking? vec4(1,0.3,0.3,1): vec4(1,1,1,1);
         textShader.translate = vec3(-320,240,0);
         fillShader.rotation  = vec3(ease*2*PI,ease*2*PI,ease*2*PI);
         textElm.draw( textShader );
