@@ -67,9 +67,9 @@ abstract class Shader
         enforce!glGenVertexArrays( 1, &_vao );
         use();
 
-        _transform  = vec3(0,0,0);
-        _rotation   = vec3(0,0,0);
-        _translate  = vec3(1,1,1);
+        _transform  = vec3(1f,1f,1f);
+        _rotation   = vec3(0f,0f,0f);
+        _translate  = vec3(1f,1f,1f);
         _projection = mat4.identity;
         applyMatrix();
     }
