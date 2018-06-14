@@ -16,7 +16,8 @@
     "dependencies": {
         "derelict-ft": "~>1.1.3",
         "derelict-gl3": "~>1.0.24",
-        "derelict-glfw3": "~>3.1.3"
+        "derelict-glfw3": "~>3.1.3",
+        "easyff-d": "~>0.0.1-alpha"
     },
 
     "configurations": [
