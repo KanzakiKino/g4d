@@ -24,11 +24,11 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
         resize( sz );
         clear();
     }
-    this ( vec2i sz, Type* src, size_t srcByte )
+    this ( vec2i sz, Type* src )
     {
         this( sz );
-        auto copyByte = min( srcByte, Type.sizeof*_bits.length );
-        memcpy( ptr, src, copyByte );
+        _bits.length = sz.x*sz.y*LengthPerPixel;
+        memcpy( ptr, src, Type.sizeof*_bits.length );
     }
     this ( vec2i sz, Type[] src )
     {
