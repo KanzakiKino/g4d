@@ -12,7 +12,7 @@ class RectElement : RegularNgonElement!4
         super();
     }
 
-    void resize ( vec2 sz )
+    void resize ( vec2 sz, vec2 uv = vec2(1f,1f) )
     {
         auto halfW = sz.x/2;
         auto halfH = sz.y/2;
@@ -24,7 +24,7 @@ class RectElement : RegularNgonElement!4
             -halfW, -halfH, 0, 1,
         ]);
         _uv.overwrite([
-            0f,1f, 1f,1f, 1f,0f, 0f,0f,
+            0f,0f, uv.x,0f, uv.x,uv.y, 0f,uv.y,
         ]);
     }
 }
