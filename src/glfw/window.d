@@ -8,6 +8,15 @@ import g4d.gl.lib,
 import std.conv,
        std.string;
 
+enum WindowHint
+{
+    None      = 0x0000,
+    Resizable = 0b0001,
+    Maximized = 0b0010,
+    Floating  = 0b0100,
+    Visible   = 0b1000,
+}
+
 // Window is a class that manages GLFWwindow.
 // Initializing GLFW will be executed automatically if it's necessary.
 class Window
@@ -34,10 +43,15 @@ class Window
     protected GLFWwindow* _window;
     EventHandler handler;
 
-    this ( vec2i sz, string text )
+    this ( vec2i sz, string text, int hint = WindowHint.None )
     {
         initLibraries();
         _windowCount++;
+
+        enforce!glfwWindowHint( GLFW_RESIZABLE, hint & WindowHint.Resizable );
+        enforce!glfwWindowHint(   GLFW_VISIBLE, hint & WindowHint.Visible   );
+        enforce!glfwWindowHint(  GLFW_FLOATING, hint & WindowHint.Floating  );
+        enforce!glfwWindowHint( GLFW_MAXIMIZED, hint & WindowHint.Maximized );
 
         enforce!glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
         enforce!glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
@@ -75,5 +89,70 @@ class Window
     void applyFrame ()
     {
         enforce!glfwSwapBuffers( _window );
+    }
+
+    @property void title ( string text )
+    {
+        enforce!glfwSetWindowTitle( _window, text.toStringz );
+    }
+
+    @property vec2i pos ()
+    {
+        int x, y;
+        enforce!glfwGetWindowPos( _window, &x, &y );
+        return vec2i(x,y);
+    }
+    @property void pos ( vec2i p )
+    {
+        enforce!glfwSetWindowPos( _window, p.x, p.y );
+    }
+
+    @property vec2i size ()
+    {
+        int w, h;
+        enforce!glfwGetWindowSize( _window, &w, &h );
+        return vec2i(w,h);
+    }
+    @property void size ( vec2i sz )
+    {
+        enforce!glfwSetWindowSize( _window, sz.x, sz.y );
+    }
+    @property void aspectRatio ( vec2i ratio )
+    {
+        enforce!glfwSetWindowAspectRatio( _window, ratio.x, ratio.y );
+    }
+    void setClampSize ( vec2i min, vec2i max )
+    {
+        enforce!glfwSetWindowSizeLimits( _window, min.x, min.y, max.x, max.y );
+    }
+
+    void show ()
+    {
+        enforce!glfwShowWindow( _window );
+    }
+    void hide ()
+    {
+        enforce!glfwHideWindow( _window );
+    }
+    void focus ()
+    {
+        enforce!glfwFocusWindow( _window );
+    }
+    void close ()
+    {
+        enforce!glfwSetWindowShouldClose( _window, true );
+    }
+
+    void minimize ()
+    {
+        enforce!glfwIconifyWindow( _window );
+    }
+    void maximize ()
+    {
+        enforce!glfwMaximizeWindow( _window );
+    }
+    void restore ()
+    {
+        enforce!glfwRestoreWindow( _window );
     }
 }

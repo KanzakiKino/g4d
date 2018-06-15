@@ -46,6 +46,7 @@ void main ( string[] args )
     auto rgbaShader       = new RGBA3DShader;
     rgbaShader.projection = mat4.orthographic( -320f, 320f, 240f, -240f, short.min, short.max );
 
+    win.show();
     size_t frame = 0;
     while ( win.alive )
     {
