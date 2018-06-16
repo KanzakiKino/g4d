@@ -12,7 +12,7 @@ void main ( string[] args )
     }
 
     vec2 pos = vec2(0,0); bool clicking = false;
-    auto win = new Window( vec2i(640,480), "hogehoge" );
+    auto win = new Window( vec2i(640,480), "hogehoge", WindowHint.Resizable );
     win.handler.onMouseMove = delegate void ( vec2 sz ) nothrow
     {
         pos = vec2( sz.x-320, -sz.y+240 );
@@ -22,6 +22,10 @@ void main ( string[] args )
         if ( b == MouseButton.Left ) {
             clicking = toggle;
         }
+    };
+    win.handler.onFbResize = delegate void ( vec2i sz )
+    {
+        win.clip( vec2i(0,0), sz );
     };
 
     auto font = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );

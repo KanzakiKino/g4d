@@ -6,23 +6,25 @@ import g4d.glfw.lib,
        g4d.math.vector;
 import std.string;
 
-alias WindowMoveHandler    = nothrow void delegate ( vec2i );
-alias WindowResizeHandler  = nothrow void delegate ( vec2i );
-alias WindowCloseHandler   = nothrow void delegate ();
-alias WindowRefreshHandler = nothrow void delegate ();
-alias WindowFocusHandler   = nothrow void delegate ( bool );
-alias WindowIconifyHandler = nothrow void delegate ( bool );
-alias FbResizeHandler      = nothrow void delegate ( vec2i );
+alias WindowMoveHandler    = void delegate ( vec2i );
+alias WindowResizeHandler  = void delegate ( vec2i );
+alias WindowCloseHandler   = void delegate ();
+alias WindowRefreshHandler = void delegate ();
+alias WindowFocusHandler   = void delegate ( bool );
+alias WindowIconifyHandler = void delegate ( bool );
+alias FbResizeHandler      = void delegate ( vec2i );
 
-alias MouseButtonHandler = nothrow void delegate ( MouseButton, bool );
-alias MouseMoveHandler   = nothrow void delegate ( vec2 );
-alias MouseEnterHandler  = nothrow void delegate ( bool );
-alias MouseScrollHandler = nothrow void delegate ( vec2 );
-alias KeyHandler         = nothrow void delegate ( Key, KeyState );
-alias CharacterHandler   = nothrow void delegate ( dchar );
+alias MouseButtonHandler = void delegate ( MouseButton, bool );
+alias MouseMoveHandler   = void delegate ( vec2 );
+alias MouseEnterHandler  = void delegate ( bool );
+alias MouseScrollHandler = void delegate ( vec2 );
+alias KeyHandler         = void delegate ( Key, KeyState );
+alias CharacterHandler   = void delegate ( dchar );
 
 struct EventHandler
 {
+    Exception throwedException = null;
+
     WindowMoveHandler    onWindowMove    = null;
     WindowResizeHandler  onWindowResize  = null;
     WindowCloseHandler   onWindowClose   = null;
@@ -48,7 +50,11 @@ struct EventHandler
             {
                 auto ptr = cast(EventHandler*) glfwGetWindowUserPointer( win );
                 if ( ptr.%HANDLER% ) {
-                    ptr.%HANDLER%( %HANDLER_ARGS% );
+                    try {
+                        ptr.%HANDLER%( %HANDLER_ARGS% );
+                    } catch ( Exception e ) {
+                        ptr.throwedException = e;
+                    }
                 }
             }
         }
