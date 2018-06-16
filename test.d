@@ -1,76 +1,129 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 import g4d;
-import std.math;
+import std.algorithm,
+       std.math,
+       std.random;
 
-enum Text = "東條 英機（とうじょう ひでき、1884年（明治17年）7月30日（戸籍上は12月30日） - 1948年（昭和23年）12月23日）は、日本の陸軍軍人、政治家。階級位階勲等功級は陸軍大将従二位勲一等功二級。現在の百科事典や教科書等では新字体で東条 英機と表記されることが多い[注釈 3]。軍人および政治家として関東軍参謀長（第10代）、陸軍航空総監（初代）、陸軍大臣（第50-52代）、内閣総理大臣（第40代）、内務大臣（第64代）、外務大臣（第66代）、文部大臣（第53代）、商工大臣（第25代）、軍需大臣（初代）などを歴任した。"d;
+class Game
+{
+    enum PolyCount = 500;
+
+    protected Window       _win;
+    protected Fill3DShader _shader;
+
+    protected RegularNgonElement!3 _drawer;
+
+    struct Poly
+    {
+        float size;
+        vec3 pos;
+        vec3 speed;
+        vec3 rota;
+        vec3 rotaSpeed;
+        vec4 color;
+    }
+    protected Poly[] _polys;
+
+    this ()
+    {
+        _win    = new Window( vec2i(640,480), "HelloWorld - g4d", WindowHint.Resizable );
+        _shader = new Fill3DShader;
+        _drawer = new RegularNgonElement!3;
+
+        _win.handler.onFbResize = delegate ( vec2i sz )
+        {
+            resizeViewport( sz );
+        };
+        resizeViewport( _win.size );
+
+        _win.handler.onMouseButton = delegate ( MouseButton btn, bool press )
+        {
+            if ( !press && btn == MouseButton.Right ) {
+                createPolys();
+            }
+        };
+        createPolys();
+    }
+
+    protected void resizeViewport ( vec2i sz )
+    {
+        _win.clip( vec2i(0,0), sz );
+
+        auto halfW = sz.x/2;
+        auto halfH = sz.y/2;
+        _shader.projection = mat4.orthographic( -halfW, halfW, halfH, -halfH, short.min, short.max );
+    }
+
+    protected void createPolys ()
+    {
+        auto sz = _win.size;
+        auto halfW = sz.x/2f;
+        auto halfH = sz.y/2f;
+
+        auto rndX () { return uniform( -halfW, halfW ); }
+        auto rndY () { return uniform( -halfH, halfH ); }
+        auto rndZ () { return uniform( short.min, short.max ); }
+        auto rndCol () { return uniform(0f,1f); }
+
+        _polys = [];
+        for ( size_t i = 0; i < PolyCount; i++ ) {
+            Poly poly;
+            poly.size      = uniform( 10f, 100f );
+            poly.pos       = vec3( rndX, rndY, rndZ );
+            poly.speed     = vec3( rndZ%10, rndZ%10, rndZ%10 );
+            poly.rota      = vec3( rndZ%PI, rndZ%PI, rndZ%PI );
+            poly.rotaSpeed = vec3( rndCol%0.1, rndCol%0.1, rndCol%0.1 );
+            poly.color     = vec4( rndCol, rndCol, rndCol, 1f );
+            _polys ~= poly;
+        }
+    }
+
+    protected void updatePolys ()
+    {
+        auto sz = _win.size;
+        auto halfW = sz.x/2f;
+        auto halfH = sz.y/2f;
+
+        foreach ( ref poly; _polys ) {
+            poly.pos += poly.speed;
+            if ( poly.pos.x > halfW || poly.pos.x < -halfW ) {
+                poly.speed.x *= -1;
+            }
+            if ( poly.pos.y > halfH || poly.pos.y < -halfH ) {
+                poly.speed.y *= -1;
+            }
+            poly.pos.x = min(halfW, max(-halfW, poly.pos.x));
+            poly.pos.y = min(halfH, max(-halfH, poly.pos.y));
+
+            poly.rota += poly.rotaSpeed;
+        }
+    }
+
+    void exec ()
+    {
+        _win.show();
+        while ( _win.alive ) {
+            _win.pollEvents();
+            _win.resetFrame();
+
+            updatePolys();
+
+            _shader.use();
+            foreach ( poly; _polys ) {
+                _shader.translate = poly.pos;
+                _shader.rotation  = poly.rota;
+                _shader.color     = poly.color;
+                _drawer.resize( poly.size );
+                _drawer.draw( _shader );
+            }
+
+            _win.applyFrame();
+        }
+    }
+}
 
 void main ( string[] args )
 {
-    if ( args.length != 2 ) {
-        throw new Exception( "Args are not enough." );
-    }
-
-    vec2 pos = vec2(0,0); bool clicking = false;
-    auto win = new Window( vec2i(640,480), "hogehoge", WindowHint.Resizable );
-    win.handler.onMouseMove = delegate void ( vec2 sz ) nothrow
-    {
-        pos = vec2( sz.x-320, -sz.y+240 );
-    };
-    win.handler.onMouseButton = delegate void ( MouseButton b, bool toggle )
-    {
-        if ( b == MouseButton.Left ) {
-            clicking = toggle;
-        }
-    };
-    win.handler.onFbResize = delegate void ( vec2i sz )
-    {
-        win.clip( vec2i(0,0), sz );
-    };
-
-    auto font = new Font( "/usr/share/fonts/TTF/Ricty-Regular.ttf" );
-    auto face = new FontFace( font, vec2i(16,16) );
-
-    auto textElm          = new HTextElement;
-    textElm.maxSize       = vec2(640,0);
-    textElm.lineHeightMag = 3f;
-    textElm.appendText( Text, face );
-
-    auto bitmap  = new MediaFile(args[1]).decodeNextImage();
-    auto texture = new Tex2D( bitmap );
-    auto bmpSize = vec2(bitmap.width, bitmap.rows);
-    auto texSize = vec2(texture.size);
-
-    auto ngon = new RectElement;
-    ngon.resize( vec2(400,400), vec2(bmpSize.x/texSize.x,bmpSize.y/texSize.y) );
-
-    auto textShader       = new Alpha3DShader;
-    textShader.projection = mat4.orthographic( -320f, 320f, 240f, -240f, short.min, short.max );
-
-    auto rgbaShader       = new RGBA3DShader;
-    rgbaShader.projection = mat4.orthographic( -320f, 320f, 240f, -240f, short.min, short.max );
-
-    win.show();
-    size_t frame = 0;
-    while ( win.alive )
-    {
-        auto ease = frame%500/500f;
-
-        win.pollEvents();
-        win.resetFrame();
-
-        rgbaShader.use();
-        rgbaShader.translate = vec3(pos,400);
-        rgbaShader.rotation  = vec3(ease*2*PI,ease*2*PI,ease*2*PI);
-        rgbaShader.uploadTexture( texture );
-        ngon.draw( rgbaShader );
-
-        textShader.use();
-        textShader.color     = clicking? vec4(1,0.3,0.3,1): vec4(1,1,1,1);
-        textShader.translate = vec3(-320,240,0);
-        textElm.draw( textShader );
-
-        win.applyFrame();
-        frame++;
-    }
+    (new Game).exec();
 }
