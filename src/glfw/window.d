@@ -82,6 +82,9 @@ class Window
 
     void resetFrame ()
     {
+        if ( handler.throwedException ) {
+            throw handler.throwedException;
+        }
         enforce!glfwMakeContextCurrent( _window );
         DerelictGL3.reload();
         enforce!glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -154,5 +157,11 @@ class Window
     void restore ()
     {
         enforce!glfwRestoreWindow( _window );
+    }
+
+    void clip ( vec2i leftTop, vec2i sz )
+    {
+        auto y = size.y - leftTop.y - sz.y;
+        enforce!glViewport( leftTop.x, y, sz.x, sz.y );
     }
 }
