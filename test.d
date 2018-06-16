@@ -1,4 +1,4 @@
-// Written under LGPL-3.0 in the D programming language.
+// Written without lICENSE in the D programming language.
 // Copyright 2018 KanzakiKino
 import g4d;
 import std.algorithm,
