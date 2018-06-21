@@ -33,6 +33,5 @@ vec4[] genRegularNgonBorderVertexes ( size_t n, float size, float width )
         result ~= v;
         result ~= vec4( v.x*ratio, v.y*ratio, v.z, v.w );
     }
-    import std.stdio; result.writeln;
     return result;
 }
