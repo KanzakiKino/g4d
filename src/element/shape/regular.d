@@ -4,15 +4,17 @@ module g4d.element.shape.regular;
 import g4d.element.base,
        g4d.gl.buffer,
        g4d.math.matrix,
+       g4d.math.ngon,
        g4d.math.vector,
        g4d.shader.base;
 import std.math;
 
-class RegularNgonElement ( ubyte N ) : Element
+class RegularNgonElement ( size_t N ) : Element
     if ( N > 0 )
 {
+    alias n = N;
+
     protected ArrayBuffer _pos;
-    protected ArrayBuffer _uv;
 
     this ()
     {
@@ -22,28 +24,19 @@ class RegularNgonElement ( ubyte N ) : Element
     override void clear ()
     {
         _pos = new ArrayBuffer( new float[N*4] );
-        _uv  = new ArrayBuffer( new float[N*2] );
     }
 
-    void resize ( float sz )
+    void resize ( float size )
     {
-        auto pos = vec4( 0, sz, 0, 1 );
-        auto mat = mat4.rotation( 0f, 0f, 2f*PI/N );
-
-        static foreach ( i; 0..N )
-        {
-            _pos.overwrite(       pos.scalars, i*4 );
-            _uv .overwrite( pos.scalars[0..2], i*2 );
-            pos = vec4( mat*pos.toMatrix );
+        auto verts = genRegularNgonVertexes( N, size );
+        foreach ( i,v; verts ) {
+            _pos.overwrite( v.scalars, i*4 );
         }
     }
 
     override void draw ( Shader s )
     {
         s.uploadPositionBuffer( _pos );
-        if (s.textureSupport ) {
-            s.uploadUvBuffer( _uv );
-        }
         s.applyMatrix();
         s.drawFan( N );
     }
