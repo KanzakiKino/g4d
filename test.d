@@ -12,7 +12,7 @@ class Game
     protected Window       _win;
     protected Fill3DShader _shader;
 
-    protected RegularNgonElement!3 _drawer;
+    protected RegularNgonBorderElement!3 _drawer;
 
     struct Poly
     {
@@ -29,7 +29,7 @@ class Game
     {
         _win    = new Window( vec2i(640,480), "HelloWorld - g4d", WindowHint.Resizable );
         _shader = new Fill3DShader;
-        _drawer = new RegularNgonElement!3;
+        _drawer = new RegularNgonBorderElement!3;
 
         _win.handler.onFbResize = delegate ( vec2i sz )
         {
@@ -103,6 +103,7 @@ class Game
     void exec ()
     {
         _win.show();
+        _drawer.resize( 100, 10 );
         while ( _win.alive ) {
             _win.pollEvents();
             _win.resetFrame();
@@ -110,13 +111,10 @@ class Game
             updatePolys();
 
             _shader.use();
-            foreach ( poly; _polys ) {
-                _shader.translate = poly.pos;
-                _shader.rotation  = poly.rota;
-                _shader.color     = poly.color;
-                _drawer.resize( poly.size );
-                _drawer.draw( _shader );
-            }
+            _shader.translate = vec3(0,0,0);
+            _shader.rotation  = vec3(0,0,0);
+            _shader.color     = vec4(1f,1f,1f,1f);
+            _drawer.draw( _shader );
 
             _win.applyFrame();
         }

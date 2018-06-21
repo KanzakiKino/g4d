@@ -4,7 +4,8 @@ module g4d;
 
 public
 {
-    import g4d.element.shape.rect,
+    import g4d.element.shape.border,
+           g4d.element.shape.rect,
            g4d.element.shape.regular,
            g4d.element.text;
     import g4d.file.media;

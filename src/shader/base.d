@@ -133,6 +133,10 @@ abstract class Shader
     {
         enforce!glDrawArrays( GL_TRIANGLE_FAN, 0, polyCnt.to!int );
     }
+    void drawStrip ( size_t polyCnt )
+    {
+        enforce!glDrawArrays( GL_TRIANGLE_STRIP, 0, polyCnt.to!int );
+    }
 }
 
 // This is an exception type used in shader modules.
