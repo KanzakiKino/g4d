@@ -2,7 +2,7 @@
 // Copyright 2019 KanzakiKino
 module g4d.shader.vertex.threedim;
 
-enum ThreeDimVertexShaderSource = import("shader/vertex/threedim.glsl");
+enum ThreeDimVertexShaderSource = import("g4d/shader/vertex/threedim.glsl");
 
 template ThreeDimVertexShader ()
 {

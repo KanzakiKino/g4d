@@ -2,7 +2,7 @@
 // Copyright 2018 KanzakiKino
 module g4d.shader.fragment.rgba;
 
-enum RGBAFragShaderSource = import("shader/fragment/rgba.glsl");
+enum RGBAFragShaderSource = import("g4d/shader/fragment/rgba.glsl");
 
 template RGBAFragShader ()
 {

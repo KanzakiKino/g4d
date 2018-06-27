@@ -2,7 +2,7 @@
 // Copyright 2018 KanzakiKino
 module g4d.shader.fragment.fill;
 
-enum FillFragShaderSource = import("shader/fragment/fill.glsl");
+enum FillFragShaderSource = import("g4d/shader/fragment/fill.glsl");
 
 template FillFragShader ()
 {

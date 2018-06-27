@@ -2,7 +2,7 @@
 // Copyright 2018 KanzakiKino
 module g4d.shader.fragment.alpha;
 
-enum AlphaFragShaderSource = import("shader/fragment/alpha.glsl");
+enum AlphaFragShaderSource = import("g4d/shader/fragment/alpha.glsl");
 
 template AlphaFragShader ()
 {
