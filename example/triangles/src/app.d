@@ -50,7 +50,7 @@ class App
             shader.projection = projection *
                 mat4.rotation( rotation.x, rotation.y, rotation.z );
             foreach ( v; pos ) {
-                shader.translate = v;
+                shader.setVectors( v );
                 triangle.draw( shader );
             }
 

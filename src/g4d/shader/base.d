@@ -67,9 +67,7 @@ abstract class Shader
         enforce!glGenVertexArrays( 1, &_vao );
         use();
 
-        _transform  = vec3(1f,1f,1f);
-        _rotation   = vec3(0f,0f,0f);
-        _translate  = vec3(1f,1f,1f);
+        initVectors();
         _projection = mat4.identity;
         applyMatrix();
     }
@@ -111,6 +109,17 @@ abstract class Shader
     @property ref  rotation   () { return _rotation;   }
     @property ref  translate  () { return _translate;  }
     @property ref  projection () { return _projection; }
+
+    void setVectors ( vec3 late, vec3 rota = vec3(0,0,0), vec3 form = vec3(1,1,1) )
+    {
+        transform = form;
+        rotation  = rota;
+        translate = late;
+    }
+    void initVectors ()
+    {
+        setVectors( vec3(0,0,0) );
+    }
 
     void uploadPositionBuffer ( ArrayBuffer );
     void uploadUvBuffer ( ArrayBuffer )
