@@ -176,3 +176,25 @@ class ShaderException : G4dException
         super( msg, file, line );
     }
 }
+
+struct ShaderStateSaver {
+    protected Shader target;
+    protected vec3   form, rota, late;
+    protected mat4   proj;
+
+    this ( Shader s ) {
+        target = s;
+        form = s.transform;
+        rota = s.rotation;
+        late = s.translate;
+        proj = s.projection;
+    }
+
+    ~this ()
+    {
+        target.transform  = form;
+        target.rotation   = rota;
+        target.translate  = late;
+        target.projection = proj;
+    }
+}
