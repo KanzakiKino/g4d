@@ -24,6 +24,8 @@ unittest
     assert( v3.toMatrix.aa == 10 );
     assert( equal(vec4(mat1x4([1,2,3,4])).scalars.dup, [1,2,3,4]) );
 
+    assert( vec2(10f,10f)/2 == vec2(5f,5f) );
+
     assert( !isVector!int );
 }
 
@@ -133,7 +135,7 @@ struct Vector ( Type, ubyte Dimension )
         } else static if ( op == "*" ) {
             multiple( rhs );
         } else static if ( op == "/" ) {
-            multiple( 1/rhs );
+            multiple( 1f/rhs );
         } else {
             static assert( false, "Operated with unsupported type." );
         }
@@ -157,7 +159,7 @@ struct Vector ( Type, ubyte Dimension )
         } else static if ( op == "*" ) {
             result.multiple( rhs );
         } else static if ( op == "/" ) {
-            result.multiple( 1/rhs );
+            result.multiple( 1f/rhs );
         } else {
             static assert( false, "Operated with unsupported type." );
         }
