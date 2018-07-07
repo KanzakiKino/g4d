@@ -7,7 +7,8 @@ g4d is a graphics library for dlang.
 
 ## Requirements
 
-- libeasyff [1.0.1](https://github.com/KanzakiKino/easyFF/releases/tag/v1.0.1)
+- FFmpeg 4.0
+- libeasyff [v1.0.2](https://github.com/KanzakiKino/easyFF/releases/tag/v1.0.2)
 - Freetype2 2.9.1
 - GLFW 3.2.1 or more
 - OpenGL 3.3 or more
