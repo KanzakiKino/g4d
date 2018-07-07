@@ -25,6 +25,7 @@ class RegularNgonBorderElement ( size_t N ) : RegularNgonElement!(N*2+2)
 
     override void draw ( Shader s )
     {
+        auto saver = ShaderStateSaver( s );
         s.uploadPositionBuffer( _pos );
         s.applyMatrix();
         s.drawStrip( n );

@@ -149,6 +149,7 @@ class HTextElement : Element
             return;
         }
 
+        auto saver = ShaderStateSaver(s);
         s.translate.y -= _firstLineHeight;
         s.applyMatrix();
 

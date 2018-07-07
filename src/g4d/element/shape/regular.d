@@ -36,6 +36,7 @@ class RegularNgonElement ( size_t N ) : Element
 
     override void draw ( Shader s )
     {
+        auto saver = ShaderStateSaver( s );
         s.uploadPositionBuffer( _pos );
         s.applyMatrix();
         s.drawFan( N );
