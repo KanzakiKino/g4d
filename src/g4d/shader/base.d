@@ -93,7 +93,7 @@ abstract class Shader
 
     @property bool textureSupport () { return false; }
 
-    void use ()
+    void use ( bool zbuffer = true )
     {
         enforce!glUseProgram( _program );
         enforce!glBindVertexArray( _vao );
@@ -101,7 +101,11 @@ abstract class Shader
         enforce!glEnable( GL_BLEND );
         enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-        enforce!glEnable( GL_DEPTH_TEST );
+        if ( zbuffer ) {
+            enforce!glEnable( GL_DEPTH_TEST );
+        } else {
+            enforce!glDisable( GL_DEPTH_TEST );
+        }
     }
 
     @property void matrix     ( mat4 );
