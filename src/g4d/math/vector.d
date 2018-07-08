@@ -26,6 +26,8 @@ unittest
 
     assert( vec2(10f,10f)/2 == vec2(5f,5f) );
 
+    v2 -= vec2i(1,1);
+
     assert( !isVector!int );
 }
 
@@ -131,7 +133,7 @@ struct Vector ( Type, ubyte Dimension )
         static if ( op == "+" ) {
             plus( rhs );
         } else static if ( op == "-" ) {
-            plus( -1*rhs );
+            plus( rhs*-1 );
         } else static if ( op == "*" ) {
             multiple( rhs );
         } else static if ( op == "/" ) {
