@@ -40,9 +40,10 @@ class HTextElement : Element
 
     override void clear ()
     {
-        _glyphs  = [];
-        _texture = null;
-        _polys   = [];
+        _glyphs          = [];
+        _texture         = null;
+        _polys           = [];
+        _firstLineHeight = 0;
     }
 
     const @property isFixed () { return !!_polys.length; }
@@ -114,7 +115,7 @@ class HTextElement : Element
             if ( maxSize.x > 0 && pos.x+g.advance > maxSize.x ) {
                 pos.x  = 0;
                 pos.y -= lineHeight;
-                if ( !_firstLineHeight ) {
+                if ( _firstLineHeight == 0f ) {
                     _firstLineHeight = lineHeight;
                 }
                 if ( maxSize.y > 0 && -pos.y > maxSize.y ) {
@@ -127,6 +128,9 @@ class HTextElement : Element
             pos.x      += g.advance;
             uvLeft     += g.bmp.width;
             lineHeight  = max( lineHeight, g.bmp.rows*lineHeightMag ).to!size_t;
+        }
+        if ( _firstLineHeight == 0f ) {
+            _firstLineHeight = lineHeight;
         }
     }
     protected void fix ()
