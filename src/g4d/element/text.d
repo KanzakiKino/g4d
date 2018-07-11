@@ -101,7 +101,7 @@ class HTextElement : Element
         return poly;
     }
     // Creates polygons from glyphs and adds it.
-    protected void generatePolys ()
+    protected vec2 generatePolys ()
     {
         assert( _texture && !isFixed );
         _firstLineHeight = 0;
@@ -132,23 +132,24 @@ class HTextElement : Element
         if ( _firstLineHeight == 0f ) {
             _firstLineHeight = lineHeight;
         }
+        return pos;
     }
-    protected void fix ()
+    vec2 fix ()
     {
         assert( !isFixed );
+        auto size = vec2(0,0);
 
         _texture = createTexture();
         if ( _texture ) {
-            generatePolys();
+            size = generatePolys();
         }
         _glyphs  = [];
+
+        return size;
     }
 
     override void draw ( Shader s )
     {
-        if ( _glyphs.length ) {
-            fix();
-        }
         if ( !_polys.length ) {
             return;
         }
