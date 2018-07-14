@@ -71,11 +71,12 @@ class HTextElement : Element
         auto w = _glyphs.map!( x => x.bmp.width ).sum;
         auto h = _glyphs.map!( x => x.bmp.rows  ).maxElement;
 
-        auto   result = new Tex2D( new BitmapA( vec2i(w,h) ) );
+        auto   addW   = _glyphs.length;
+        auto   result = new Tex2D( new BitmapA( vec2i(w+addW,h) ) );
         size_t curpos = 0;
         foreach ( g; _glyphs ) {
             result.overwrite( g.bmp, vec2i( curpos, 0 ));
-            curpos += g.bmp.width;
+            curpos += g.bmp.width + 1;
         }
         return result;
     }
@@ -126,7 +127,7 @@ class HTextElement : Element
             _polys ~= createPolyFromGlyph( pos, uvLeft, g, texSize );
 
             pos.x      += g.advance;
-            uvLeft     += g.bmp.width;
+            uvLeft     += g.bmp.width + 1;
             lineHeight  = max( lineHeight, g.bmp.rows*lineHeightMag ).to!size_t;
         }
         if ( _firstLineHeight == 0f ) {
