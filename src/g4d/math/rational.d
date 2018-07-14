@@ -7,7 +7,7 @@ N nextPower2 ( N ) ( N x )
     if ( isNumeric!N )
 {
     N y = 1;
-    while ( y < x ) {
+    while ( y <= x ) {
         y *= 2;
     }
     return y;
