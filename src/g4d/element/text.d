@@ -132,8 +132,9 @@ class HTextElement : Element
         }
         if ( _firstLineHeight == 0f ) {
             _firstLineHeight = lineHeight;
+            pos.y           -= lineHeight;
         }
-        return pos;
+        return vec2(pos.x, -pos.y);
     }
     vec2 fix ()
     {
