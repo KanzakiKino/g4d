@@ -68,11 +68,11 @@ class HTextElement : Element
         if ( !_glyphs.length ) {
             return null;
         }
-        auto w = _glyphs.map!( x => x.bmp.width ).sum;
-        auto h = _glyphs.map!( x => x.bmp.rows  ).maxElement;
+        // Width must have enough width.
+        auto w = _glyphs.map!( x => x.bmp.width+1 ).sum*2;
+        auto h = _glyphs.map!( x => x.bmp.rows    ).maxElement;
 
-        auto   addW   = _glyphs.length;
-        auto   result = new Tex2D( new BitmapA( vec2i(w+addW,h) ) );
+        auto   result = new Tex2D( new BitmapA( vec2i(w,h) ) );
         size_t curpos = 0;
         foreach ( g; _glyphs ) {
             result.overwrite( g.bmp, vec2i( curpos, 0 ));
