@@ -117,7 +117,7 @@ class DerelictFTLoader : SharedLibLoader {
         bindFunc(cast(void**)&FT_Bitmap_Done, "FT_Bitmap_Done");
         bindFunc(cast(void**)&FT_GlyphSlot_Own_Bitmap, "FT_GlyphSlot_Own_Bitmap");
 
-        bindFunc(cast(void**)&FT_Stream_OpenBzip2, "FT_Stream_OpenBzip2");
+//        bindFunc(cast(void**)&FT_Stream_OpenBzip2, "FT_Stream_OpenBzip2");
 
         bindFunc(cast(void**)&FTC_Manager_New, "FTC_Manager_New");
         bindFunc(cast(void**)&FTC_Manager_Reset, "FTC_Manager_Reset");

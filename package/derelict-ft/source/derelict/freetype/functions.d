@@ -102,7 +102,7 @@ extern(C) @nogc nothrow {
     alias da_FT_Bitmap_Done = FT_Error function(FT_Library,FT_Bitmap*);
 
     // ftbzip2.h
-    alias da_FT_Stream_OpenBzip2 = FT_Error function(FT_Stream,FT_Stream);
+//    alias da_FT_Stream_OpenBzip2 = FT_Error function(FT_Stream,FT_Stream);
 
     // ftcache.h
     alias da_FTC_Manager_New = FT_Error function(FT_Library,FT_UInt,FT_UInt,FT_ULong,FTC_Face_Requester,FT_Pointer,FTC_Manager*);
@@ -345,7 +345,7 @@ __gshared {
     da_FT_GlyphSlot_Own_Bitmap FT_GlyphSlot_Own_Bitmap;
     da_FT_Bitmap_Done FT_Bitmap_Done;
 
-    da_FT_Stream_OpenBzip2 FT_Stream_OpenBzip2;
+//    da_FT_Stream_OpenBzip2 FT_Stream_OpenBzip2;
 
     da_FTC_Manager_New FTC_Manager_New;
     da_FTC_Manager_Reset FTC_Manager_Reset;
