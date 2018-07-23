@@ -23,7 +23,9 @@
     "configurations": [
         {
             "name": "default",
-            "targetType": "staticLibrary"
+            "targetType": "staticLibrary",
+
+            "copyFiles-windows-x86": ["./lib/windows-x86/*.dll"]
         },
         {
             "name": "unittest",
