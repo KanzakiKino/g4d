@@ -7,8 +7,7 @@ import g4d.ft.font,
        g4d.gl.texture,
        g4d.math.rational,
        g4d.math.vector;
-import std.algorithm,
-       std.ascii;
+import std.algorithm;
 
 class TextTexture : Tex2D
 {
@@ -17,8 +16,6 @@ class TextTexture : Tex2D
         Glyph[dchar] result;
 
         foreach ( c; text ) {
-            if ( c.isWhite ) continue;
-
             if ( c !in result ) {
                 result[c] = face.render( c );
             }
