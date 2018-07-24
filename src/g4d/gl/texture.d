@@ -95,6 +95,17 @@ class Tex2D : Texture
         enforce!glTexImage2D( target, 0, GL_RGBA,
                 bmp.width.to!int, bmp.rows.to!int, 0, format, type, bmp.ptr );
     }
+    this ( vec2i sz )
+    {
+        super( vec2i( sz.x.nextPower2, sz.y.nextPower2 ) );
+
+        auto size = vec2i(size);
+        auto ptr  = new ubyte[size.x*size.y];
+
+        enforce!glTexImage2D( target, 0, GL_RGBA,
+                size.x, size.y, 0, GL_RED,
+                GL_UNSIGNED_BYTE, ptr.ptr );
+    }
 
     void overwrite ( B ) ( B bmp, vec2i offset = vec2i(0,0) )
         if ( isBitmap!B )
