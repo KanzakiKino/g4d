@@ -1,28 +1,22 @@
 // Written without lICENSE in the D programming language.
 // Copyright 2018 KanzakiKino
 import g4d;
-import std.algorithm,
-       std.math,
-       std.random;
 
 class Game
 {
     protected Window        _win;
     protected Alpha3DShader _shader;
 
-    protected RectElement _elm;
-    protected TextTexture _tex;
+    protected HTextElement _elm;
+    protected FontFace     _face;
 
     this ()
     {
         _win    = new Window( vec2i(640,480), "HelloWorld - g4d", WindowHint.Resizable );
         _shader = new Alpha3DShader;
 
-        auto face = new FontFace( new Font("/usr/share/fonts/TTF/Ricty-Regular.ttf"), vec2i(0,16) );
-
-        _elm = new RectElement;
-        _tex = new TextTexture( face, "hoge"d );
-        _elm.resize( vec2(_tex.size), vec2(1,1) );
+        _elm  = new HTextElement;
+        _face = new FontFace( new Font("/usr/share/fonts/TTF/Ricty-Regular.ttf"), vec2i(0,16) );
 
         _win.handler.onWindowResize = delegate ( vec2i sz )
         {
@@ -43,9 +37,19 @@ class Game
     void exec ()
     {
         _win.show();
+        ulong frame = 0;
         while ( _win.alive ) {
             _win.pollEvents();
             _win.resetFrame();
+
+            if ( frame%150 == 0 ) {
+                _elm.loadText( _face, "KEISUKE HONDA"d );
+            } else if ( frame%50 == 0 ) {
+                _elm.loadText( _face, "HONDA"d );
+            } else if ( frame%30 == 0 ) {
+                _elm.loadText( _face, "KEISUKE"d );
+            }
+            frame++;
 
             _shader.use();
             _shader.initVectors();
