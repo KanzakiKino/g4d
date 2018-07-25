@@ -8,7 +8,8 @@ import g4d.element.base,
        g4d.math.vector,
        g4d.shader.base,
        g4d.exception;
-import std.algorithm;
+import std.algorithm,
+       std.math;
 
 // This is a struct of character polygon.
 private struct CharPoly
@@ -64,8 +65,8 @@ class HTextElement : Element
             auto right  = left + metrics.size.x;
             auto bottom = top - metrics.size.y;
 
-            _size.x = max( right , _size.x );
-            _size.y = max( bottom, _size.y );
+            _size.x = max( right, _size.x );
+            _size.y = max( bottom.abs, _size.y );
 
             poly.pos    = vec2( left, top );
             poly.length = metrics.horiAdvance;
