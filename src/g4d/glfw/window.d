@@ -41,12 +41,14 @@ class Window
     }
 
     protected GLFWwindow* _window;
+
     EventHandler handler;
 
     this ( vec2i sz, string text, int hint = WindowHint.None )
     {
         initLibraries();
         _windowCount++;
+
 
         enforce!glfwWindowHint( GLFW_RESIZABLE, hint & WindowHint.Resizable );
         enforce!glfwWindowHint(   GLFW_VISIBLE, hint & WindowHint.Visible   );
@@ -87,6 +89,9 @@ class Window
         }
         enforce!glfwMakeContextCurrent( _window );
         DerelictGL3.reload();
+
+        auto size = size;
+        enforce!glViewport( 0,0, size.x, size.y );
         enforce!glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     }
     void applyFrame ()
@@ -157,11 +162,5 @@ class Window
     void restore ()
     {
         enforce!glfwRestoreWindow( _window );
-    }
-
-    void clip ( vec2i leftTop, vec2i sz )
-    {
-        auto y = size.y - leftTop.y - sz.y;
-        enforce!glViewport( leftTop.x, y, sz.x, sz.y );
     }
 }

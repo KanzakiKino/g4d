@@ -12,6 +12,7 @@ public
     import g4d.ft.font,
            g4d.ft.texture;
     import g4d.gl.buffer,
+           g4d.gl.stencil,
            g4d.gl.texture;
     import g4d.glfw.type,
            g4d.glfw.window;
