@@ -7,7 +7,8 @@ import g4d.ft.font,
        g4d.gl.texture,
        g4d.math.rational,
        g4d.math.vector;
-import std.algorithm;
+import std.algorithm,
+       std.array;
 
 class TextTexture : Tex2D
 {
@@ -24,12 +25,15 @@ class TextTexture : Tex2D
     }
     protected static vec2i calcEfficientSize ( Glyph[] g )
     {
-        auto width = g.map!"a.bmp.width+1".sum;
-        if ( g.length ) {
-            auto lastWidth = g[$-1].bmp.width;
+        auto glyphs = g.filter!
+            (x => x.bmp.width > 0 && x.bmp.rows > 0 ).array;
+
+        auto width = glyphs.map!"a.bmp.width+1".sum;
+        if ( glyphs.length ) {
+            auto lastWidth = glyphs[$-1].bmp.width;
             width += lastWidth.nextPower2 - lastWidth;
         }
-        return vec2i( width, g.map!"a.bmp.rows".maxElement );
+        return vec2i( width, glyphs.map!"a.bmp.rows".maxElement );
     }
 
     struct Metrics
@@ -79,8 +83,10 @@ class TextTexture : Tex2D
         int pos = 0;
         foreach ( c,g; glyphs ) {
             _chars[c] = Metrics( g, pos, vec2(size) );
-            overwrite( g.bmp, vec2i(pos,0) );
-            pos += g.bmp.width+1;
+            if ( g.bmp.width > 0 && g.bmp.rows > 0 ) {
+                overwrite( g.bmp, vec2i(pos,0) );
+                pos += g.bmp.width+1;
+            }
         }
     }
 }
