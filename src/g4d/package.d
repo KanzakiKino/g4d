@@ -14,7 +14,8 @@ public
     import g4d.gl.buffer,
            g4d.gl.stencil,
            g4d.gl.texture;
-    import g4d.glfw.type,
+    import g4d.glfw.cursor,
+           g4d.glfw.type,
            g4d.glfw.window;
     import g4d.math.matrix,
            g4d.math.vector;
