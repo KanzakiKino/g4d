@@ -2,6 +2,7 @@
 // Copyright 2018 KanzakiKino
 module g4d.glfw.window;
 import g4d.gl.lib,
+       g4d.glfw.cursor,
        g4d.glfw.handler,
        g4d.glfw.lib,
        g4d.math.vector;
@@ -29,6 +30,8 @@ class Window
             initGLFW();
             DerelictGL3.load();
             _libInitialized = true;
+
+            Cursor.createStandardCursors();
         }
     }
 
@@ -48,7 +51,6 @@ class Window
     {
         initLibraries();
         _windowCount++;
-
 
         enforce!glfwWindowHint( GLFW_RESIZABLE, hint & WindowHint.Resizable );
         enforce!glfwWindowHint(   GLFW_VISIBLE, hint & WindowHint.Visible   );
@@ -162,5 +164,10 @@ class Window
     void restore ()
     {
         enforce!glfwRestoreWindow( _window );
+    }
+
+    void setCursor ( Cursor c )
+    {
+        enforce!glfwSetCursor( _window, c.ptr );
     }
 }

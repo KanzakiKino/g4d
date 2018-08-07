@@ -52,10 +52,13 @@ class Game
 
             if ( frame%150 == 0 ) {
                 _text.loadText( _face, "KEISUKE HONDA"d );
+                _win.setCursor( Cursor.IBeam );
             } else if ( frame%50 == 0 ) {
                 _text.loadText( _face, "HONDA"d );
+                _win.setCursor( Cursor.HResize );
             } else if ( frame%30 == 0 ) {
                 _text.loadText( _face, "KEISUKE"d );
+                _win.setCursor( Cursor.VResize );
             }
             frame++;
 
