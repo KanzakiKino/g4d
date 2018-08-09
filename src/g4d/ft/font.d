@@ -72,6 +72,8 @@ class FontFace
 
     this ( Font f, vec2i s )
     {
+        if ( s.x == 0 ) s.x = s.y;
+        if ( s.y == 0 ) s.y = s.x;
         _font = f;
         _size = s;
     }
