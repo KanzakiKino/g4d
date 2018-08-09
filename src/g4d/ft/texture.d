@@ -31,7 +31,7 @@ class TextTexture : Tex2D
         auto width = glyphs.map!"a.bmp.width+1".sum;
         if ( glyphs.length ) {
             auto lastWidth = glyphs[$-1].bmp.width;
-            width += lastWidth.nextPower2 - lastWidth;
+            width += lastWidth.nextPower2 - lastWidth + 1;
         }
         return vec2i( width, glyphs.map!"a.bmp.rows".maxElement );
     }
