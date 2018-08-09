@@ -35,6 +35,7 @@ class HTextElement : Element
     const @property polys () { return _polys; }
 
     protected vec2 _size;
+    @property size () { return _size; }
 
     this ()
     {
