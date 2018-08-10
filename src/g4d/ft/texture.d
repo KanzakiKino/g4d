@@ -87,6 +87,7 @@ class TextTexture : Tex2D
                 overwrite( g.bmp, vec2i(pos,0) );
                 pos += g.bmp.width+1;
             }
+            g.bmp.dispose();
         }
     }
 }
