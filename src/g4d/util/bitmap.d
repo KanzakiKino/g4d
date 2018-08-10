@@ -4,48 +4,72 @@ module g4d.util.bitmap;
 import g4d.math.vector;
 import std.algorithm,
        std.conv;
-import core.stdc.string;
+import core.stdc.stdlib,
+       core.stdc.string;
 
 class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
 {
     alias bitType        = Type;
     enum  lengthPerPixel = LengthPerPixel;
 
-    protected Type[] _bits;
-    @property bits () { return _bits; }
-    @property ptr () { return _bits.ptr; }
+    protected Type* _data;
+    @property data () { return _data; }
 
     protected size_t _width, _rows;
     @property width () { return _width; }
     @property rows () { return _rows; }
 
+    @property dataLength ()
+    {
+        return _width*_rows*LengthPerPixel;
+    }
+    @property dataByteSize ()
+    {
+        return dataLength * Type.sizeof;
+    }
+
     this ( vec2i sz )
     {
+        _data = null;
         resize( sz );
         clear();
     }
     this ( vec2i sz, Type* src )
     {
         this( sz );
-        _bits.length = sz.x*sz.y*LengthPerPixel;
-        memcpy( ptr, src, Type.sizeof*_bits.length );
+        memcpy( data, src, dataByteSize );
     }
     this ( vec2i sz, Type[] src )
     {
         this( sz );
-        _bits = src.dup;
+        memcpy( data, src.ptr, dataByteSize );
+    }
+
+    ~this ()
+    {
+        dispose();
+    }
+    void dispose ()
+    {
+        if ( _data ) {
+            free( _data );
+            _data = null;
+        }
+        _width = 0;
+        _rows  = 0;
     }
 
     protected void resize ( vec2i sz )
     {
-        _width       = sz.x.to!uint;
-        _rows        = sz.y.to!uint;
-        _bits.length = width*rows*LengthPerPixel;
+        dispose();
+        _width = sz.x.to!uint;
+        _rows  = sz.y.to!uint;
+        _data  = cast(Type*)malloc( dataByteSize );
     }
 
     void clear ()
     {
-        memset( ptr, 0, bits.length );
+        memset( data, 0, dataByteSize );
     }
 
     enum this_is_a_bitmap_class_of_g4d = true;

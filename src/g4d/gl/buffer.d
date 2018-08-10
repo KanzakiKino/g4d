@@ -20,7 +20,12 @@ private abstract class Buffer
         bind();
         enforce!glBufferData( target, sz, ptr, GL_STATIC_DRAW );
     }
+
     ~this ()
+    {
+        dispose();
+    }
+    void dispose ()
     {
         enforce!glDeleteBuffers( 1, &_id );
     }

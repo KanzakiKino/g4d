@@ -34,9 +34,18 @@ class MediaFile
             throw new EasyFFException( ret );
         }
     }
+
     ~this ()
     {
-        FFReader_delete( &_file );
+        dispose();
+    }
+    void dispose ()
+    {
+        if ( _file ) {
+            FFReader_delete( &_file );
+            _file = null;
+        }
+        _video = null;
     }
 
     const @property bool hasVideoStream () { return !!_video; }

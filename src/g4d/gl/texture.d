@@ -29,7 +29,12 @@ abstract class Texture
         enforce!glTexParameteri( target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
         enforce!glTexParameteri( target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     }
+
     ~this ()
+    {
+        dispose();
+    }
+    void dispose ()
     {
         enforce!glDeleteTextures( 1, &id );
     }
@@ -55,11 +60,11 @@ class Tex2D : Texture
         enum lpp = bmp.lengthPerPixel;
 
         auto srcw = bmp.width, srch = bmp.rows;
-        auto src  = bmp.ptr;
+        auto src  = bmp.data;
 
         auto dstw   = srcw.nextPower2, dsth = srch.nextPower2;
         auto result = new B( vec2i(dstw,dsth) );
-        auto dst    = result.ptr;
+        auto dst    = result.data;
 
         size_t x = 0, y = 0, i = 0, srci = 0, dsti = 0;
         for ( y = 0; y < dsth; y++ ) {
@@ -93,7 +98,8 @@ class Tex2D : Texture
         enum format = toBitmapFormat!B;
 
         enforce!glTexImage2D( target, 0, GL_RGBA,
-                bmp.width.to!int, bmp.rows.to!int, 0, format, type, bmp.ptr );
+                bmp.width.to!int, bmp.rows.to!int, 0, format, type, bmp.data );
+        bmp.dispose();
     }
     this ( vec2i sz )
     {
@@ -116,6 +122,7 @@ class Tex2D : Texture
         enum type = toGLType!(B.bitType);
         enum format = toBitmapFormat!B;
         enforce!glTexSubImage2D( target, 0, offset.x.to!int, offset.y.to!int,
-                bmp.width.to!int, bmp.rows.to!int, format, type, bmp.ptr );
+                bmp.width.to!int, bmp.rows.to!int, format, type, bmp.data );
+        bmp.dispose();
     }
 }
