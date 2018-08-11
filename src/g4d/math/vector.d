@@ -99,6 +99,16 @@ struct Vector ( Type, ubyte Dimension )
         alias x = get!1;
     }
 
+    @property bool isZero ()
+    {
+        static foreach ( i; 0..Dimension ) {
+            if ( _scalars[i] != 0 ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     string toString ()
     {
         return scalars.to!string;

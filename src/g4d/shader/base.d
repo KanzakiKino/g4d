@@ -137,10 +137,20 @@ abstract class Shader
 
     void applyMatrix ()
     {
-        auto translate = mat4.translate( _translate.x, _translate.y, _translate.z );
-        auto rotation  = mat4.rotation ( _rotation.x, _rotation.y, _rotation.z );
-        auto transform = mat4.transform( _transform.x, _transform.y, _transform.z );
-        matrix = _projection*translate*rotation*transform;
+        auto result = _projection;
+        if ( !_translate.isZero ) {
+            result = result*mat4.translate(
+                    _translate.x, _translate.y, _translate.z );
+        }
+        if ( !_rotation.isZero ) {
+            result = result*mat4.rotation(
+                    _rotation.x, _rotation.y, _rotation.z );
+        }
+        if ( !_transform.isZero ) {
+            result = result*mat4.transform(
+                    _transform.x, _transform.y, _transform.z );
+        }
+        matrix = result;
     }
     void drawFan ( size_t polyCnt )
     {
