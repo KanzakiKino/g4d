@@ -1,6 +1,8 @@
 // Written without lICENSE in the D programming language.
 // Copyright 2018 KanzakiKino
 import g4d;
+import std.digest.sha,
+       std.conv;
 
 class Game
 {
@@ -22,8 +24,8 @@ class Game
         _rc = new RectElement;
         _rc.resize( vec2(50,100) );
 
-        _text = new HTextElement;
         _face = new FontFace( new Font("/usr/share/fonts/TTF/Ricty-Regular.ttf"), vec2i(0,16) );
+        _text = new HTextElement;
 
         _win.handler.onWindowResize = delegate ( vec2i sz )
         {
@@ -42,6 +44,13 @@ class Game
         _rectShader.projection = proj;
     }
 
+    protected int seed;
+    protected dstring getText ()
+    {
+        char alphabet = 'a'+(seed++%26);
+        return (alphabet~"").sha1Of.toHexString.to!dstring;
+    }
+
     void exec ()
     {
         _win.show();
@@ -50,24 +59,7 @@ class Game
             _win.pollEvents();
             _win.resetFrame();
 
-            if ( frame%150 == 0 ) {
-                _text.loadText( _face, "KEISUKE HONDA"d );
-                _win.setCursor( Cursor.IBeam );
-            } else if ( frame%50 == 0 ) {
-                _text.loadText( _face, "HONDA"d );
-                _win.setCursor( Cursor.HResize );
-            } else if ( frame%30 == 0 ) {
-                _text.loadText( _face, "KEISUKE"d );
-                _win.setCursor( Cursor.VResize );
-            }
-            frame++;
-
-            Stencil.resetBuffer( false, true );
-            _rectShader.use();
-            _rectShader.initVectors();
-            _rectShader.color = vec4(1,1,1,0.5);
-            _rc.draw( _rectShader );
-            Stencil.applyBuffer();
+            _text.loadText( _face, getText() );
 
             _textShader.use();
             _textShader.initVectors();
