@@ -27,19 +27,22 @@ GLenum toGLType ( T ) ()
     }
 }
 
-GLenum toBitmapFormat ( T ) ()
-    if ( isBitmap!T )
+GLenum toFormat ( uint lpp )
 {
-    enum lpp = T.lengthPerPixel;
-    static if ( lpp == 1 ) {
-        return GL_RED;
-    } else static if ( lpp == 2 ) {
-        return GL_RG;
-    } else static if ( lpp == 3 ) {
-        return GL_RGB;
-    } else static if ( lpp == 4 ) {
-        return GL_RGBA;
-    } else {
-        static assert( false, "%d len/pix is not supported.".format(lpp) );
-    }
+    assert( lpp > 0 && lpp <= 4 );
+    return lpp==1? GL_RED :
+           lpp==2? GL_RG  :
+           lpp==3? GL_RGB :
+           lpp==4? GL_RGBA:
+           0;
+}
+
+GLenum toCompressedFormat ( uint lpp )
+{
+    assert( lpp > 0 && lpp <= 4 );
+    return lpp==1? GL_COMPRESSED_RED :
+           lpp==2? GL_COMPRESSED_RG  :
+           lpp==3? GL_COMPRESSED_RGB :
+           lpp==4? GL_COMPRESSED_RGBA:
+           0;
 }

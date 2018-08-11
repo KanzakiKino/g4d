@@ -74,7 +74,7 @@ class TextTexture : Tex2D
     this ( FontFace face, dstring text )
     {
         auto glyphs = renderGlyphs( face, text );
-        super( calcEfficientSize( glyphs.values ) );
+        super( calcEfficientSize( glyphs.values ), 1 );
         drawGlyphs( glyphs );
     }
 
