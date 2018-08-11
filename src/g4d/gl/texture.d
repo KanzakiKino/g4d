@@ -88,7 +88,7 @@ class Tex2D : Texture
         return GL_TEXTURE_2D;
     }
 
-    this ( B ) ( B bmp )
+    this ( B ) ( B bmp, bool compress = false )
         if ( isBitmap!B )
     {
         bmp = resizeBitmapPower2( bmp );
@@ -97,10 +97,15 @@ class Tex2D : Texture
         enum type = toGLType!(B.bitType);
         enum format = toBitmapFormat!B;
 
-        enforce!glTexImage2D( target, 0, GL_RGBA,
+        const texFormat = compress? GL_COMPRESSED_RGBA: GL_RGBA;
+
+        enforce!glTexImage2D( target, 0, texFormat,
                 bmp.width.to!int, bmp.rows.to!int, 0, format, type, bmp.data );
         bmp.dispose();
     }
+
+    // Cannot compress empty texture
+    // because compressed texture cannot use glTexSubImage2D.
     this ( vec2i sz )
     {
         super( vec2i( sz.x.nextPower2, sz.y.nextPower2 ) );
