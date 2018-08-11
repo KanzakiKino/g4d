@@ -17,7 +17,8 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
 
     protected size_t _width, _rows;
     @property width () { return _width; }
-    @property rows () { return _rows; }
+    @property rows  () { return _rows; }
+    @property size  () { return vec2i(width,rows); }
 
     @property dataLength ()
     {
@@ -65,6 +66,63 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
         _width = sz.x.to!uint;
         _rows  = sz.y.to!uint;
         _data  = cast(Type*)malloc( dataByteSize );
+    }
+
+    auto conservativeResize ( vec2i sz )
+    {
+        enum lpp = lengthPerPixel;
+
+        auto srcw = width, srch = rows;
+        auto src  = data;
+
+        auto result = new typeof(this)( sz );
+        auto dstw   = result.width, dsth = result.rows;
+        auto dst    = result.data;
+
+        size_t dstx = 0, dsty = 0,
+               srci = 0, dsti = 0;
+
+        for ( dsty = 0; dsty < dsth; dsty++ ) {
+            for ( dstx = 0; dstx < dstw; dstx++ ) {
+                if ( dstx >= srcw || dsty >= srch ) {
+                    static foreach ( j; 0..lpp ) {
+                        dst[dsti++] = 0;
+                    }
+                } else {
+                    static foreach ( j; 0..lpp ) {
+                        dst[dsti++] = src[srci++];
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    void overwrite ( vec2i offset, typeof(this) bmp )
+    {
+        enum lpp = lengthPerPixel;
+
+        auto srcl = offset.x, srct = offset.y;
+        auto srcr = srcl+bmp.width, srcb = srct+bmp.rows;
+        auto src  = bmp.data;
+
+        auto dstw = width, dsth = rows;
+        auto dst  = data;
+
+        assert( srcl >= 0 && srct >= 0 );
+        assert( srcr <= dstw && srcb <= dsth );
+
+        size_t dstx = srcl, dsty = srct,
+               srci = 0, dsti = 0;
+
+        for ( dsty = srct; dsty < srcb; dsty++ ) {
+            dsti = (dsty*dstw + srcl)*lpp;
+            for ( dstx = srcl; dstx < srcr; dstx++ ) {
+                static foreach ( j; 0..lpp ) {
+                    dst[dsti++] = src[srci++];
+                }
+            }
+        }
     }
 
     void clear ()

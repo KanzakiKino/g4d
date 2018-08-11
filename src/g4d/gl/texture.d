@@ -57,30 +57,9 @@ class Tex2D : Texture
     protected static B resizeBitmapPower2 ( B ) ( B bmp )
         if ( isBitmap!B )
     {
-        enum lpp = bmp.lengthPerPixel;
-
-        auto srcw = bmp.width, srch = bmp.rows;
-        auto src  = bmp.data;
-
-        auto dstw   = srcw.nextPower2, dsth = srch.nextPower2;
-        auto result = new B( vec2i(dstw,dsth) );
-        auto dst    = result.data;
-
-        size_t x = 0, y = 0, i = 0, srci = 0, dsti = 0;
-        for ( y = 0; y < dsth; y++ ) {
-            for ( x = 0; x < dstw; x++ ) {
-                if ( x >= srcw || y >= srch ) {
-                    for ( i = 0; i < lpp; i++ ) {
-                        dst[dsti++] = 0;
-                    }
-                } else {
-                    for ( i = 0; i < lpp; i++ ) {
-                        dst[dsti++] = src[srci++];
-                    }
-                }
-            }
-        }
-        return result;
+        auto sz = vec2i( bmp.width.nextPower2,
+                bmp.rows.nextPower2 );
+        return bmp.conservativeResize( sz );
     }
 
     override const pure @property GLenum target ()
