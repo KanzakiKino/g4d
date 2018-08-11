@@ -78,7 +78,7 @@ class Tex2D : Texture
 
         enum  srcFormat = lpp.toFormat;
         const texFormat = compress?
-            lpp.toCompressedFomrat: srcFormat;
+            lpp.toCompressedFormat: srcFormat;
 
         enforce!glTexImage2D( target, 0, texFormat,
                 bmp.width.to!int, bmp.rows.to!int, 0, srcFormat, type, bmp.data );
