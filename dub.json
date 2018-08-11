@@ -34,7 +34,8 @@
         {
             "name": "unittest",
             "targetType": "executable",
-            "mainSourceFile": "./test.d"
+            "mainSourceFile": "./test.d",
+            "dflags": ["-profile=gc"]
         }
     ]
 }
