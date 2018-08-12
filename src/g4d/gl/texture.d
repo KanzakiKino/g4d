@@ -81,7 +81,7 @@ class Tex2D : Texture
             lpp.toCompressedFormat: srcFormat;
 
         enforce!glTexImage2D( target, 0, texFormat,
-                bmp.width.to!int, bmp.rows.to!int, 0, srcFormat, type, bmp.data );
+                size.x, size.y, 0, srcFormat, type, bmp.data );
         bmp.dispose();
     }
 
@@ -90,8 +90,6 @@ class Tex2D : Texture
     this ( vec2i sz, uint lpp = 4 )
     {
         super( vec2i( sz.x.nextPower2, sz.y.nextPower2 ) );
-
-        auto size = vec2i(size);
 
         enforce!glTexImage2D( target, 0, lpp.toFormat,
                 size.x, size.y, 0, GL_RED,

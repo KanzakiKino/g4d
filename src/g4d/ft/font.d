@@ -53,7 +53,8 @@ class Font
         enforce!FT_Load_Glyph( _face, index, FT_LOAD_RENDER );
 
         auto ftbmp = _face.glyph.bitmap;
-        auto bmp = new BitmapA( vec2i(ftbmp.width,ftbmp.rows), ftbmp.buffer);
+        auto size  = vec2i( ftbmp.width.to!int, ftbmp.rows.to!int );
+        auto bmp   = new BitmapA( size, ftbmp.buffer );
 
         auto metrics = _face.glyph.metrics;
         auto bearing = vec2i( metrics.horiBearingX.to!int/64,
