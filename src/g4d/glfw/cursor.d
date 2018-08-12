@@ -25,7 +25,7 @@ private template StandardCursors ()
     {
         mixin( q{
             protected static Cursor _$name$;
-            static @property $name$ () { return _$name$; }
+            static @property const(Cursor) $name$ () { return _$name$; }
         }.replace( "$name$", s ) );
     }
 
