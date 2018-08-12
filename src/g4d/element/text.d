@@ -67,14 +67,16 @@ class HTextElement : Element
         auto  curpos   = vec2(0,0);
         const fontsize = face.size.y;
 
+        float left, top, right, bottom;
+
         foreach ( c; text ) {
             const metrics = _texture.chars[c];
             auto  poly    = Poly(c);
 
-            auto left   = curpos.x + metrics.horiBearing.x;
-            auto top    = curpos.y - fontsize + metrics.horiBearing.y;
-            auto right  = left + metrics.size.x;
-            auto bottom = top - metrics.size.y;
+            left   = curpos.x + metrics.horiBearing.x;
+            top    = curpos.y - fontsize + metrics.horiBearing.y;
+            right  = left + metrics.size.x;
+            bottom = top - metrics.size.y;
 
             _size.x = max( right, _size.x );
             _size.y = max( bottom.abs, _size.y );
