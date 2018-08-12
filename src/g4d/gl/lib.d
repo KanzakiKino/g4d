@@ -29,6 +29,7 @@ template enforce ( alias func )
     }
 }
 
+/// Initializes GL.
 extern(C) void initGL ()
 {
     DerelictGL3.load();

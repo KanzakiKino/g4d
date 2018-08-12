@@ -96,12 +96,12 @@ class Bitmap ( _Type = ubyte, size_t _LengthPerPixel = 4 )
     {
         enum lpp = LengthPerPixel;
 
-        auto srcw = width, srch = rows;
-        auto src  = data;
+        const srcw = width, srch = rows;
+        const src  = data;
 
-        auto result = new Bitmap!(Type,lpp)( sz );
-        auto dstw   = result.width, dsth = result.rows;
-        auto dst    = result._data;
+        auto  result = new Bitmap!(Type,lpp)( sz );
+        const dstw   = result.width, dsth = result.rows;
+        auto  dst    = result._data;
 
         size_t dstx = 0, dsty = 0,
                srci = 0, dsti = 0;
@@ -127,12 +127,12 @@ class Bitmap ( _Type = ubyte, size_t _LengthPerPixel = 4 )
     {
         enum lpp = LengthPerPixel;
 
-        auto srcl = offset.x, srct = offset.y;
-        auto srcr = srcl+bmp.width, srcb = srct+bmp.rows;
-        auto src  = bmp.data;
+        const srcl = offset.x, srct = offset.y;
+        const srcr = srcl+bmp.width, srcb = srct+bmp.rows;
+        const src  = bmp.data;
 
-        auto dstw = width, dsth = rows;
-        auto dst  = _data;
+        const dstw = width, dsth = rows;
+        auto  dst  = _data;
 
         assert( srcl >= 0 && srct >= 0 );
         assert( srcr <= dstw && srcb <= dsth );
