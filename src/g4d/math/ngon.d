@@ -8,12 +8,6 @@ module g4d.math.ngon;
 import gl3n.linalg;
 import std.math;
 
-unittest
-{
-    import std.stdio;
-    genRegularNgonVertexes(3,1f).writeln;
-}
-
 /// Returns positions of regular polygons' vertexes.
 vec4[] genRegularNgonVertexes ( size_t n, float size )
 { // TODO: optimize
