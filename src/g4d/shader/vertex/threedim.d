@@ -39,7 +39,7 @@ template ThreeDimVertexShader ()
 
     override @property void matrix ( mat4 m )
     {
-        enforce!glUniformMatrix4fv( _matrixLoc, 1, GL_FALSE, &m[0][0] );
+        enforce!glUniformMatrix4fv( _matrixLoc, 1, GL_TRUE, &m[0][0] );
     }
 
     override void uploadPositionBuffer ( in ArrayBuffer buf )

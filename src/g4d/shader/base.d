@@ -177,10 +177,10 @@ abstract class Shader
     {
         auto result = _projection;
         if ( _translate != vec3(0,0,0) ) {
-            result.translate( _translate );
+            result *= mat4.translation( _translate );
         }
         if ( _rotation != vec3(0,0,0) ) {
-            result *= mat4.rotation( 0, _rotation );
+            result *= mat4.rotation( 1f, _rotation );
         }
         if ( _transform != vec3(1,1,1) ) {
             result *= mat4.scaling(
