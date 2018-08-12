@@ -28,3 +28,8 @@ template enforce ( alias func )
         return func( args );
     }
 }
+
+extern(C) void initGL ()
+{
+    DerelictGL3.load();
+}

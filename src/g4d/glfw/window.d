@@ -27,19 +27,13 @@ enum WindowHint
 /// Initializing GLFW will be executed automatically if it's necessary.
 class Window
 {
-    protected static bool _libInitialized;
-    protected static void initLibraries ()
+    private static this ()
     {
-        if ( !_libInitialized ) {
-            initGLFW();
-            DerelictGL3.load();
-            _libInitialized = true;
+        initGLFW();
+        initGL();
 
-            Cursor.createStandardCursors();
-        }
+        Cursor.createStandardCursors();
     }
-
-    protected static uint _windowCount;
 
     /// Handles events of all window.
     static void pollEvents ()
@@ -55,9 +49,6 @@ class Window
     ///
     this ( vec2i sz, string text, int hint = WindowHint.None )
     {
-        initLibraries();
-        _windowCount++;
-
         enforce!glfwWindowHint( GLFW_RESIZABLE, hint & WindowHint.Resizable );
         enforce!glfwWindowHint(   GLFW_VISIBLE, hint & WindowHint.Visible   );
         enforce!glfwWindowHint(  GLFW_FLOATING, hint & WindowHint.Floating  );
@@ -78,10 +69,7 @@ class Window
     ///
     ~this ()
     {
-        _windowCount--;
-        if ( _windowCount == 0 ) {
-            enforce!glfwTerminate();
-        }
+        dispose();
     }
     /// Checks if the window is disposed.
     const @property disposed ()
