@@ -10,8 +10,8 @@ import g4d.element.shape.regular,
        g4d.shader.base;
 
 /// An element of polygons border. N is length of vertex.
-class RegularNgonBorderElement ( size_t N ) : RegularNgonElement!(N*2+2)
-    if ( N >= 3 )
+class RegularNgonBorderElement ( size_t _N ) : RegularNgonElement!(_N*2+2)
+    if ( _N >= 3 )
 {
     ///
     this ()
@@ -22,11 +22,11 @@ class RegularNgonBorderElement ( size_t N ) : RegularNgonElement!(N*2+2)
     ///
     void resize ( float size, float width )
     {
-        auto verts = genRegularNgonBorderVertexes( N, size, width );
-        assert( verts.length == n );
+        auto verts = genRegularNgonBorderVertexes( _N, size, width );
+        assert( verts.length == N );
 
         foreach ( i,v; verts ) {
-            _pos.overwrite( v.scalars, i*4 );
+            _pos.overwrite( v.vector, i*4 );
         }
     }
 
@@ -37,6 +37,6 @@ class RegularNgonBorderElement ( size_t N ) : RegularNgonElement!(N*2+2)
 
         s.uploadPositionBuffer( _pos );
         s.applyMatrix();
-        s.drawStrip( n );
+        s.drawStrip( N );
     }
 }
