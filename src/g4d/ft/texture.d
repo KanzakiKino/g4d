@@ -6,8 +6,8 @@ import g4d.ft.font,
        g4d.gl.buffer,
        g4d.gl.texture,
        g4d.math.rational,
-       g4d.math.vector,
        g4d.util.bitmap;
+import gl3n.linalg;
 import std.algorithm,
        std.array,
        std.conv;

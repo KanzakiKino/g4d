@@ -5,9 +5,9 @@ import g4d.element.base,
        g4d.ft.font,
        g4d.ft.texture,
        g4d.gl.buffer,
-       g4d.math.vector,
        g4d.shader.base,
        g4d.exception;
+import gl3n.linalg;
 import std.algorithm,
        std.math;
 

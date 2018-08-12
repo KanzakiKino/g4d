@@ -1,8 +1,7 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.math.ngon;
-import g4d.math.matrix,
-       g4d.math.vector;
+import gl3n.linalg;
 import std.math;
 
 vec4[] genRegularNgonVertexes ( size_t n, float size )
@@ -10,11 +9,11 @@ vec4[] genRegularNgonVertexes ( size_t n, float size )
     vec4[] result;
 
     auto pos = vec4( 0f, size, 0f, 1f );
-    auto mat = mat4.rotation( 0, 0, PI*2f/n );
+    auto mat = mat4.rotation( 0, 0, 0, PI*2f/n );
 
     for ( size_t i = 0; i < n; i++ ) {
         result ~= pos;
-        pos = vec4( mat * pos.toMatrix );
+        pos     = mat * pos;
     }
     return result;
 }

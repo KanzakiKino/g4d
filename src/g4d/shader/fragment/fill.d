@@ -6,8 +6,8 @@ enum FillFragShaderSource = import("g4d/shader/fragment/fill.glsl");
 
 template FillFragShader ()
 {
-    import g4d.gl.lib,
-           g4d.math.vector;
+    import g4d.gl.lib;
+    import gl3n.linalg;
 
     override const pure @property string fragSource ()
     {

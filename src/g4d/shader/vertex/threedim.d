@@ -7,8 +7,8 @@ enum ThreeDimVertexShaderSource = import("g4d/shader/vertex/threedim.glsl");
 template ThreeDimVertexShader ()
 {
     import g4d.gl.buffer,
-           g4d.gl.lib,
-           g4d.math.matrix;
+           g4d.gl.lib;
+    import gl3n.linalg;
 
     override const pure @property string vertexSource ()
     {
@@ -33,7 +33,7 @@ template ThreeDimVertexShader ()
 
     override @property void matrix ( mat4 m )
     {
-        enforce!glUniformMatrix4fv( _matrixLoc, 1, GL_FALSE, m.ptr );
+        enforce!glUniformMatrix4fv( _matrixLoc, 1, GL_FALSE, &m[0][0] );
     }
 
     override void uploadPositionBuffer ( ArrayBuffer buf )

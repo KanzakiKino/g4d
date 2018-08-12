@@ -1,7 +1,7 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.util.bitmap;
-import g4d.math.vector;
+import gl3n.linalg;
 import std.algorithm,
        std.conv;
 import core.stdc.stdlib,
@@ -18,7 +18,11 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
     protected size_t _width, _rows;
     @property width () { return _width; }
     @property rows  () { return _rows; }
-    @property size  () { return vec2i(width,rows); }
+
+    @property size  ()
+    {
+        return vec2i( width.to!int, rows.to!int );
+    }
 
     @property dataLength ()
     {

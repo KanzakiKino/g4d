@@ -1,10 +1,10 @@
 // Written under LGPL-3.0 in the D programming language.
 // Copyright 2018 KanzakiKino
 module g4d.file.media;
-import g4d.math.vector,
-       g4d.util.bitmap,
+import g4d.util.bitmap,
        g4d.exception;
 import easyff.api;
+import gl3n.linalg;
 import std.conv,
        std.string;
 

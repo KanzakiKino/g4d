@@ -2,9 +2,9 @@
 // Copyright 2018 KanzakiKino
 module g4d.ft.font;
 import g4d.ft.lib,
-       g4d.math.vector,
        g4d.util.bitmap,
        g4d.exception;
+import gl3n.linalg;
 import std.conv,
        std.string;
 
@@ -56,7 +56,8 @@ class Font
         auto bmp = new BitmapA( vec2i(ftbmp.width,ftbmp.rows), ftbmp.buffer);
 
         auto metrics = _face.glyph.metrics;
-        auto bearing = vec2i( metrics.horiBearingX/64, metrics.horiBearingY/64 );
+        auto bearing = vec2i( metrics.horiBearingX.to!int/64,
+                metrics.horiBearingY.to!int/64 );
 
         return Glyph( bmp, bearing, metrics.horiAdvance/64 );
     }

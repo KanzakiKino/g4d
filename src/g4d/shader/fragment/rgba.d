@@ -7,8 +7,8 @@ enum RGBAFragShaderSource = import("g4d/shader/fragment/rgba.glsl");
 template RGBAFragShader ()
 {
     import g4d.gl.lib,
-           g4d.gl.texture,
-           g4d.math.vector;
+           g4d.gl.texture;
+    import gl3n.linalg;
 
     override const pure @property string fragSource ()
     {

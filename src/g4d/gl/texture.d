@@ -4,8 +4,8 @@ module g4d.gl.texture;
 import g4d.gl.lib,
        g4d.gl.type,
        g4d.math.rational,
-       g4d.math.vector,
        g4d.util.bitmap;
+import gl3n.linalg;
 import std.conv;
 
 abstract class Texture
@@ -57,8 +57,8 @@ class Tex2D : Texture
     protected static B resizeBitmapPower2 ( B ) ( B bmp )
         if ( isBitmap!B )
     {
-        auto sz = vec2i( bmp.width.nextPower2,
-                bmp.rows.nextPower2 );
+        auto sz = vec2i( bmp.width.nextPower2.to!int,
+                bmp.rows.nextPower2.to!int );
         return bmp.conservativeResize( sz );
     }
 
@@ -72,7 +72,7 @@ class Tex2D : Texture
     {
         bmp = resizeBitmapPower2( bmp );
 
-        super( vec2i( bmp.width, bmp.rows ) );
+        super( bmp.size );
         enum type = toGLType!(B.bitType);
         enum lpp  = B.lengthPerPixel;
 

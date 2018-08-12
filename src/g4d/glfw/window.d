@@ -4,8 +4,8 @@ module g4d.glfw.window;
 import g4d.gl.lib,
        g4d.glfw.cursor,
        g4d.glfw.handler,
-       g4d.glfw.lib,
-       g4d.math.vector;
+       g4d.glfw.lib;
+import gl3n.linalg;
 import std.conv,
        std.string;
 

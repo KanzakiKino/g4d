@@ -2,8 +2,8 @@
 // Copyright 2018 KanzakiKino
 module g4d.glfw.handler;
 import g4d.glfw.lib,
-       g4d.glfw.type,
-       g4d.math.vector;
+       g4d.glfw.type;
+import gl3n.linalg;
 import std.string;
 
 alias WindowMoveHandler    = void delegate ( vec2i );

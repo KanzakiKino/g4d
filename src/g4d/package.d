@@ -17,11 +17,11 @@ public
     import g4d.glfw.cursor,
            g4d.glfw.type,
            g4d.glfw.window;
-    import g4d.math.matrix,
-           g4d.math.vector;
     import g4d.shader.alpha3d,
            g4d.shader.fill3d,
            g4d.shader.rgba3d;
     import g4d.util.bitmap;
     import g4d.exception;
+
+    import gl3n.linalg;
 }

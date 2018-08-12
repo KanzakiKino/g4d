@@ -4,9 +4,8 @@ module g4d.shader.base;
 import g4d.gl.buffer,
        g4d.gl.lib,
        g4d.gl.texture,
-       g4d.math.matrix,
-       g4d.math.vector,
        g4d.exception;
+import gl3n.linalg;
 import std.conv,
        std.string;
 
@@ -138,16 +137,14 @@ abstract class Shader
     void applyMatrix ()
     {
         auto result = _projection;
-        if ( !_translate.isZero ) {
-            result = result*mat4.translate(
-                    _translate.x, _translate.y, _translate.z );
+        if ( _translate != vec3(0,0,0) ) {
+            result.translate( _translate );
         }
-        if ( !_rotation.isZero ) {
-            result = result*mat4.rotation(
-                    _rotation.x, _rotation.y, _rotation.z );
+        if ( _rotation != vec3(0,0,0) ) {
+            result *= mat4.rotation( 0, _rotation );
         }
-        if ( !_transform.isZero ) {
-            result = result*mat4.transform(
+        if ( _transform != vec3(1,1,1) ) {
+            result *= mat4.scaling(
                     _transform.x, _transform.y, _transform.z );
         }
         matrix = result;

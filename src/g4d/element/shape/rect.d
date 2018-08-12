@@ -3,8 +3,8 @@
 module g4d.element.shape.rect;
 import g4d.element.shape.regular,
        g4d.gl.buffer,
-       g4d.math.vector,
        g4d.shader.base;
+import gl3n.linalg;
 
 class RectElement : RegularNgonElement!4
 {

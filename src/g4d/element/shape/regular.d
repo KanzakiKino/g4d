@@ -3,10 +3,9 @@
 module g4d.element.shape.regular;
 import g4d.element.base,
        g4d.gl.buffer,
-       g4d.math.matrix,
        g4d.math.ngon,
-       g4d.math.vector,
        g4d.shader.base;
+import gl3n.linalg;
 import std.math;
 
 class RegularNgonElement ( size_t N ) : Element
@@ -30,7 +29,7 @@ class RegularNgonElement ( size_t N ) : Element
     {
         auto verts = genRegularNgonVertexes( N, size );
         foreach ( i,v; verts ) {
-            _pos.overwrite( v.scalars, i*4 );
+            _pos.overwrite( v.vector, i*4 );
         }
     }
 
