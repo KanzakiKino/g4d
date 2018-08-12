@@ -14,7 +14,7 @@ class Game
     protected Alpha3DShader _textShader;
     protected Fill3DShader  _rectShader;
 
-    protected RectElement _rc;
+    protected RegularNgonBorderElement!3 _rc;
 
     protected HTextElement _text;
     protected FontFace     _face;
@@ -25,8 +25,8 @@ class Game
         _textShader = new Alpha3DShader;
         _rectShader = new Fill3DShader;
 
-        _rc = new RectElement;
-        _rc.resize( vec2(50,100) );
+        _rc = new RegularNgonBorderElement!3;
+        _rc.resize( 100f, 50f );
 
         _face = new FontFace( new Font("/usr/share/fonts/TTF/Ricty-Regular.ttf"), vec2i(0,16) );
         _text = new HTextElement;
