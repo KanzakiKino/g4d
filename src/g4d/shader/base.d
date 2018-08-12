@@ -119,19 +119,10 @@ abstract class Shader
     const @property bool textureSupport () { return false; }
 
     /// Sets the shader binded.
-    const void use ( bool zbuffer = true )
+    const void use ()
     {
         enforce!glUseProgram( _program );
         enforce!glBindVertexArray( _vao );
-
-        enforce!glEnable( GL_BLEND );
-        enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-        if ( zbuffer ) {
-            enforce!glEnable( GL_DEPTH_TEST );
-        } else {
-            enforce!glDisable( GL_DEPTH_TEST );
-        }
     }
 
     ///

@@ -24,4 +24,16 @@ struct ColorBuffer
     {
         enforce!glColorMask( r, g, b, a );
     }
+
+    /// Enables alpha blending.
+    static void enableBlend ()
+    {
+        enforce!glEnable( GL_BLEND );
+        enforce!glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    }
+    /// Disables alpha blending.
+    static void disableBlend ()
+    {
+        enforce!glDisable( GL_BLEND );
+    }
 }
