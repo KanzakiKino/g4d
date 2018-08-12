@@ -8,6 +8,7 @@ module g4d.shader.base;
 import g4d.gl.buffer,
        g4d.gl.lib,
        g4d.gl.texture,
+       g4d.shader.matrix,
        g4d.exception;
 import gl3n.linalg;
 import std.conv,
@@ -40,10 +41,9 @@ abstract class Shader
     protected GLuint _program;
     protected GLuint _vao;
 
-    protected vec3 _transform;
-    protected vec3 _rotation;
-    protected vec3 _translate;
-    protected mat4 _projection;
+    protected ShaderMatrix _matrix;
+    /// Data of translation, rotation and transformation.
+    @property ref matrix () { return _matrix; }
 
     /// GLSL source code of vertex shader.
     const pure @property string vertexSource ();
@@ -75,10 +75,6 @@ abstract class Shader
 
         enforce!glGenVertexArrays( 1, &_vao );
         use();
-
-        initVectors();
-        _projection = mat4.identity;
-        applyMatrix();
     }
 
     ///
@@ -125,29 +121,8 @@ abstract class Shader
         enforce!glBindVertexArray( _vao );
     }
 
-    ///
-    @property void matrix     ( mat4 );
-    ///
-    @property ref  transform  () { return _transform;  }
-    ///
-    @property ref  rotation   () { return _rotation;   }
-    ///
-    @property ref  translate  () { return _translate;  }
-    ///
-    @property ref  projection () { return _projection; }
-
-    /// Sets transform, rotation and translate.
-    void setVectors ( vec3 late, vec3 rota = vec3(0,0,0), vec3 form = vec3(1,1,1) )
-    {
-        transform = form;
-        rotation  = rota;
-        translate = late;
-    }
-    /// Sets all vectors to default value.
-    void initVectors ()
-    {
-        setVectors( vec3(0,0,0) );
-    }
+    /// Uploads matrix.
+    void uploadMatrix ( mat4 );
 
     /// Uploads position buffer.
     void uploadPositionBuffer ( in ArrayBuffer );
@@ -163,21 +138,10 @@ abstract class Shader
         throw new ShaderException( "This shader doesn't support texture." );
     }
 
-    /// Sends the matrix to shader.
+    /// Applies the matrix.
     void applyMatrix ()
     {
-        auto result = _projection;
-        if ( _translate != vec3(0,0,0) ) {
-            result *= mat4.translation( _translate );
-        }
-        if ( _rotation != vec3(0,0,0) ) {
-            result *= mat4.rotation( 1f, _rotation );
-        }
-        if ( _transform != vec3(1,1,1) ) {
-            result *= mat4.scaling(
-                    _transform.x, _transform.y, _transform.z );
-        }
-        matrix = result;
+        uploadMatrix( _matrix.cache );
     }
 
     /// Calls glDrawArrays with GL_TRIANGLE_FAN.
@@ -228,25 +192,18 @@ class ShaderException : G4dException
 /// and restores the shader using saved status.
 struct ShaderStateSaver
 {
-    protected Shader target;
-    protected vec3   form, rota, late;
-    protected mat4   proj;
+    protected Shader       _target;
+    protected ShaderMatrix _backup;
 
     ///
     this ( Shader s ) {
-        target = s;
-        form = s.transform;
-        rota = s.rotation;
-        late = s.translate;
-        proj = s.projection;
+        _target = s;
+        _backup = s.matrix;
     }
 
     ///
     ~this ()
     {
-        target.transform  = form;
-        target.rotation   = rota;
-        target.translate  = late;
-        target.projection = proj;
+        _target.matrix = _backup;
     }
 }

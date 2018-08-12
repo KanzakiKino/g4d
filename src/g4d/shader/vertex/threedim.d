@@ -37,7 +37,7 @@ template ThreeDimVertexShader ()
         return _uvLoc >= 0;
     }
 
-    override @property void matrix ( mat4 m )
+    override void uploadMatrix ( mat4 m )
     {
         enforce!glUniformMatrix4fv( _matrixLoc, 1, GL_TRUE, &m[0][0] );
     }

@@ -44,8 +44,8 @@ class Game
         auto halfH = sz.y/2;
         auto proj  = mat4.orthographic( -halfW, halfW, -halfH, halfH, short.min, short.max );
 
-        _textShader.projection = proj;
-        _rectShader.projection = proj;
+        _textShader.matrix.projection = proj;
+        _rectShader.matrix.projection = proj;
     }
 
     protected int seed;
@@ -77,7 +77,7 @@ class Game
             _text.loadText( _face, getText() );
 
             _textShader.use();
-            _textShader.initVectors();
+            _textShader.matrix.late = vec3(0,0,0);
             _textShader.color = vec4(1,1,1,1);
             _text.draw( _textShader );
 
@@ -86,7 +86,7 @@ class Game
             DepthBuffer.mask( true );
 
             _rectShader.use();
-            _rectShader.initVectors();
+            _rectShader.matrix.late = vec3(50,0,0);
             _rectShader.color = vec4(1,0,0,1);
             _rc.draw( _rectShader );
 

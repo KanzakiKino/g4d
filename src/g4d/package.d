@@ -24,6 +24,7 @@ public
            g4d.glfw.type,
            g4d.glfw.window;
     import g4d.shader.alpha3d,
+           g4d.shader.base,
            g4d.shader.fill3d,
            g4d.shader.rgba3d;
     import g4d.util.bitmap;
