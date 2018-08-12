@@ -1,9 +1,14 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.math.rational;
 import std.traits;
 
-N nextPower2 ( N ) ( N x )
+/// Returns the number that is power of 2 and more than x.
+N nextPower2 ( N ) ( inout N x )
     if ( isNumeric!N )
 {
     N y = 1;

@@ -1,5 +1,9 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.shader.base;
 import g4d.gl.buffer,
        g4d.gl.lib,
@@ -9,7 +13,7 @@ import gl3n.linalg;
 import std.conv,
        std.string;
 
-// This is a baseclass of shaders.
+/// A baseclass of shader.
 abstract class Shader
 {
     protected static GLuint compileShader ( GLenum shaderType, string src )
@@ -28,6 +32,9 @@ abstract class Shader
         return shader;
     }
 
+    /// Invalid shader program id.
+    enum NullId = 0;
+
     protected GLuint _vertex;
     protected GLuint _fragment;
     protected GLuint _program;
@@ -38,9 +45,12 @@ abstract class Shader
     protected vec3 _translate;
     protected mat4 _projection;
 
+    /// GLSL source code of vertex shader.
     const pure @property string vertexSource ();
+    /// GLSL source code of fragment shader.
     const pure @property string fragSource ();
 
+    ///
     this ()
     {
         _vertex = compileShader( GL_VERTEX_SHADER, vertexSource );
@@ -70,12 +80,27 @@ abstract class Shader
         _projection = mat4.identity;
         applyMatrix();
     }
+
+    ///
     ~this ()
     {
-        enforce!glDeleteVertexArrays( 1, &_vao );
-        enforce!glDeleteProgram( _program );
-        enforce!glDeleteShader( _vertex );
-        enforce!glDeleteShader( _fragment );
+        dispose();
+    }
+    /// Checks if the shader is disposed.
+    const @property disposed ()
+    {
+        return _program == NullId;
+    }
+    /// Deletes all programs and shaders.
+    void dispose ()
+    {
+        if ( !disposed ) {
+            enforce!glDeleteVertexArrays( 1, &_vao );
+            enforce!glDeleteProgram( _program );
+            enforce!glDeleteShader( _vertex );
+            enforce!glDeleteShader( _fragment );
+        }
+        _program = NullId;
     }
 
     protected GLint getUniformLoc ( string name )
@@ -90,9 +115,11 @@ abstract class Shader
     protected void initVertexShader ();
     protected void initFragShader ();
 
-    @property bool textureSupport () { return false; }
+    /// Checks the shader supports texture.
+    const @property bool textureSupport () { return false; }
 
-    void use ( bool zbuffer = true )
+    /// Sets the shader binded.
+    const void use ( bool zbuffer = true )
     {
         enforce!glUseProgram( _program );
         enforce!glBindVertexArray( _vao );
@@ -107,33 +134,45 @@ abstract class Shader
         }
     }
 
+    ///
     @property void matrix     ( mat4 );
+    ///
     @property ref  transform  () { return _transform;  }
+    ///
     @property ref  rotation   () { return _rotation;   }
+    ///
     @property ref  translate  () { return _translate;  }
+    ///
     @property ref  projection () { return _projection; }
 
+    /// Sets transform, rotation and translate.
     void setVectors ( vec3 late, vec3 rota = vec3(0,0,0), vec3 form = vec3(1,1,1) )
     {
         transform = form;
         rotation  = rota;
         translate = late;
     }
+    /// Sets all vectors to default value.
     void initVectors ()
     {
         setVectors( vec3(0,0,0) );
     }
 
-    void uploadPositionBuffer ( ArrayBuffer );
-    void uploadUvBuffer ( ArrayBuffer )
+    /// Uploads position buffer.
+    void uploadPositionBuffer ( in ArrayBuffer );
+
+    /// Uploads uv buffer.
+    void uploadUvBuffer ( in ArrayBuffer )
     {
         throw new ShaderException( "This shader doesn't support texture." );
     }
-    void uploadTexture ( Texture )
+    /// Uploads texture.
+    void uploadTexture ( in Texture )
     {
         throw new ShaderException( "This shader doesn't support texture." );
     }
 
+    /// Sends the matrix to shader.
     void applyMatrix ()
     {
         auto result = _projection;
@@ -149,19 +188,23 @@ abstract class Shader
         }
         matrix = result;
     }
+
+    /// Calls glDrawArrays with GL_TRIANGLE_FAN.
     void drawFan ( size_t polyCnt )
     {
         enforce!glDrawArrays( GL_TRIANGLE_FAN, 0, polyCnt.to!int );
     }
+    /// Calls glDrawArrays with GL_TRIANGLE_STRIP.
     void drawStrip ( size_t polyCnt )
     {
         enforce!glDrawArrays( GL_TRIANGLE_STRIP, 0, polyCnt.to!int );
     }
 }
 
-// This is an exception type used in shader modules.
+/// An exception type used in shader modules.
 class ShaderException : G4dException
 {
+    /// Checks if the shader throwed errors, and throws it.
     static void throwShaderLog ( GLuint shader, string file = __FILE__, size_t line = __LINE__ )
     {
         GLint logLength = 0;
@@ -172,6 +215,7 @@ class ShaderException : G4dException
         throw new ShaderException( "ShaderLog: "~log.to!string, file, line );
     }
 
+    /// Checks if the shader program throwed errors, and throws it.
     static void throwProgramLog ( GLuint program, string file = __FILE__, size_t line = __LINE__ )
     {
         GLint logLength = 0;
@@ -182,17 +226,22 @@ class ShaderException : G4dException
         throw new ShaderException( "ProgramLog: "~log.to!string, file, line );
     }
 
+    ///
     this ( string msg, string file = __FILE__, size_t line = __LINE__ )
     {
         super( msg, file, line );
     }
 }
 
-struct ShaderStateSaver {
+/// A struct that saves status of the shader,
+/// and restores the shader using saved status.
+struct ShaderStateSaver
+{
     protected Shader target;
     protected vec3   form, rota, late;
     protected mat4   proj;
 
+    ///
     this ( Shader s ) {
         target = s;
         form = s.transform;
@@ -201,6 +250,7 @@ struct ShaderStateSaver {
         proj = s.projection;
     }
 
+    ///
     ~this ()
     {
         target.transform  = form;

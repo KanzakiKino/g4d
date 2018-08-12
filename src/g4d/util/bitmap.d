@@ -1,5 +1,9 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.util.bitmap;
 import gl3n.linalg;
 import std.algorithm,
@@ -7,53 +11,68 @@ import std.algorithm,
 import core.stdc.stdlib,
        core.stdc.string;
 
-class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
+/// A class of bitmap.
+class Bitmap ( _Type = ubyte, size_t _LengthPerPixel = 4 )
 {
-    alias bitType        = Type;
-    enum  lengthPerPixel = LengthPerPixel;
+    /// Type of the number that shows color.
+    alias Type = _Type;
+
+    /// Length to show the color of pixel.
+    enum  LengthPerPixel = _LengthPerPixel;
 
     protected Type* _data;
-    @property data () { return _data; }
+    /// Readonly pointer to data.
+    const @property data () { return _data; }
 
     protected size_t _width, _rows;
-    @property width () { return _width; }
-    @property rows  () { return _rows; }
+    /// Width of the bitmap.
+    const @property width () { return _width; }
+    /// Height of the bitmap.
+    const @property rows  () { return _rows; }
 
-    @property size  ()
+    /// Size of the bitmap.
+    const @property size  ()
     {
         return vec2i( width.to!int, rows.to!int );
     }
 
-    @property dataLength ()
+    /// Length of the bitmap data.
+    const @property dataLength ()
     {
         return _width*_rows*LengthPerPixel;
     }
-    @property dataByteSize ()
+    /// Size of the bitmap data in byte.
+    const @property dataByteSize ()
     {
         return dataLength * Type.sizeof;
     }
 
+    ///
     this ( vec2i sz )
     {
         _data = null;
         resize( sz );
         clear();
     }
+    ///
     this ( vec2i sz, Type* src )
     {
         this( sz );
-        memcpy( data, src, dataByteSize );
+        memcpy( _data, src, dataByteSize );
     }
+    ///
     this ( vec2i sz, Type[] src )
     {
         this( sz );
-        memcpy( data, src.ptr, dataByteSize );
+        memcpy( _data, src.ptr, dataByteSize );
     }
 
+    ///
     ~this ()
     {
         dispose();
     }
+    /// Releases all memories.
     void dispose ()
     {
         if ( _data ) {
@@ -72,16 +91,17 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
         _data  = cast(Type*)malloc( dataByteSize );
     }
 
-    auto conservativeResize ( vec2i sz )
+    /// Creates resized bitmap with the same format.
+    const auto conservativeResize ( vec2i sz )
     {
-        enum lpp = lengthPerPixel;
+        enum lpp = LengthPerPixel;
 
         auto srcw = width, srch = rows;
         auto src  = data;
 
-        auto result = new typeof(this)( sz );
+        auto result = new Bitmap!(Type,lpp)( sz );
         auto dstw   = result.width, dsth = result.rows;
-        auto dst    = result.data;
+        auto dst    = result._data;
 
         size_t dstx = 0, dsty = 0,
                srci = 0, dsti = 0;
@@ -102,16 +122,17 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
         return result;
     }
 
+    /// Modifies a part of the bitmap.
     void overwrite ( vec2i offset, typeof(this) bmp )
     {
-        enum lpp = lengthPerPixel;
+        enum lpp = LengthPerPixel;
 
         auto srcl = offset.x, srct = offset.y;
         auto srcr = srcl+bmp.width, srcb = srct+bmp.rows;
         auto src  = bmp.data;
 
         auto dstw = width, dsth = rows;
-        auto dst  = data;
+        auto dst  = _data;
 
         assert( srcl >= 0 && srct >= 0 );
         assert( srcr <= dstw && srcb <= dsth );
@@ -129,21 +150,30 @@ class Bitmap ( Type = ubyte, size_t LengthPerPixel = 4 )
         }
     }
 
+    /// Fills the bitmap data with 0.
     void clear ()
     {
-        memset( data, 0, dataByteSize );
+        memset( _data, 0, dataByteSize );
     }
 
+    /// To prove this is bitmap.
     enum this_is_a_bitmap_class_of_g4d = true;
 }
 
+///
 alias BitmapA    = Bitmap!(ubyte,1);
+///
 alias BitmapRGB  = Bitmap!(ubyte,3);
+///
 alias BitmapRGBA = Bitmap!(ubyte,4);
 
+///
 alias BitmapAf    = Bitmap!(float,1);
+///
 alias BitmapRGBf  = Bitmap!(float,3);
+///
 alias BitmapRGBAf = Bitmap!(float,4);
 
+/// Checks if T is bitmap.
 enum isBitmap(T) =
     __traits(hasMember,T,"this_is_a_bitmap_class_of_g4d");

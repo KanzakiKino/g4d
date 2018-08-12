@@ -1,9 +1,14 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.glfw.cursor;
 import g4d.glfw.lib;
 import std.string;
 
+/// A type of cursor shape.
 enum CursorShape
 {
     Arrow     = GLFW_ARROW_CURSOR,
@@ -35,19 +40,39 @@ private template StandardCursors ()
     }
 }
 
+/// An object of cursor image.
+/// You can access standard cursor without creating instance.
+/// Examples: setCursor( Cursor.IBeam );
 class Cursor
 {
     mixin StandardCursors;
 
     protected GLFWcursor* _ptr;
-    @property ptr () { return _ptr; }
+    /// Pointer to glfw cursor.
+    const @property ptr () { return _ptr; }
 
+    ///
     this ( CursorShape shape )
     {
         _ptr = enforce!glfwCreateStandardCursor( shape );
     }
+
+    ///
     ~this ()
     {
-        enforce!glfwDestroyCursor( _ptr );
+        dispose();
+    }
+    /// Checks if the cursor is disposed.
+    const @property disposed ()
+    {
+        return !_ptr;
+    }
+    /// Deletes glfw cursor.
+    void dispose ()
+    {
+        if ( !disposed ) {
+            enforce!glfwDestroyCursor( _ptr );
+        }
+        _ptr = null;
     }
 }

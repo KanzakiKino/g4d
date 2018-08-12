@@ -1,5 +1,9 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.element.text;
 import g4d.element.base,
        g4d.ft.font,
@@ -11,14 +15,14 @@ import gl3n.linalg;
 import std.algorithm,
        std.math;
 
-// This is a struct of character polygon.
+/// A struct of character polygon.
 private struct CharPoly
 {
     ArrayBuffer pos;
     ArrayBuffer uv;
 }
 
-// This is an element for drawing text horizontally.
+/// An element that draws text horizontally.
 class HTextElement : Element
 {
     protected struct Poly
@@ -32,34 +36,40 @@ class HTextElement : Element
     protected Poly[]      _polys;
     protected TextTexture _texture;
 
+    /// Polygons to be drawn.
     const @property polys () { return _polys; }
 
     protected vec2 _size;
-    @property size () { return _size; }
+    /// Size of area text will be drawn.
+    const @property size () { return _size; }
 
+    ///
     this ()
     {
         clear();
     }
 
-    override void clear ()
+    ///
+    void clear ()
     {
         _polys   = [];
         _texture = null;
         _size    = vec2(0,0);
     }
 
+    /// Renders the text texture,
+    /// And calculates position of each characters.
     void loadText ( FontFace face, dstring text )
     {
         clear();
         _texture = new TextTexture( face, text );
 
-        auto curpos   = vec2(0,0);
-        auto fontsize = face.size.y;
+        auto  curpos   = vec2(0,0);
+        const fontsize = face.size.y;
 
         foreach ( c; text ) {
-            auto metrics = _texture.chars[c];
-            auto poly    = Poly(c);
+            const metrics = _texture.chars[c];
+            auto  poly    = Poly(c);
 
             auto left   = curpos.x + metrics.horiBearing.x;
             auto top    = curpos.y - fontsize + metrics.horiBearing.y;
@@ -83,12 +93,13 @@ class HTextElement : Element
         }
     }
 
-    override void draw ( Shader s )
+    ///
+    void draw ( Shader s )
     {
         if ( !_polys.length ) return;
         assert( s && _texture );
 
-        auto saver = ShaderStateSaver(s);
+        const saver = ShaderStateSaver(s);
         s.applyMatrix();
         s.uploadTexture( _texture );
 

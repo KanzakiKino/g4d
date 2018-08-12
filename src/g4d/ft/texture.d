@@ -1,5 +1,9 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.ft.texture;
 import g4d.ft.font,
        g4d.ft.lib,
@@ -12,6 +16,7 @@ import std.algorithm,
        std.array,
        std.conv;
 
+/// A texture of text.
 class TextTexture : Tex2D
 {
     protected static Glyph[dchar] renderGlyphs ( FontFace face, dstring text )
@@ -26,22 +31,27 @@ class TextTexture : Tex2D
         return result;
     }
 
+    /// A metrics data of characters.
     struct Metrics
     {
         protected int pos;
 
+        /// Size in pixel.
         vec2i       size;
+        /// UV buffer.
         ArrayBuffer uv;
 
+        /// Width of collision.
         ulong horiAdvance;
+        /// Size of moving from origin.
         vec2i horiBearing;
-
-        ulong vertAdvance;
-        vec2i vertBearing;
     }
-    protected Metrics[dchar] _chars;
-    @property chars () { return _chars.dup; }
 
+    protected Metrics[dchar] _chars;
+    /// Metrics data of characters drawn this texture.
+    const @property chars () { return _chars; }
+
+    /// Creates text texture from FontFace and text.
     this ( FontFace face, dstring text )
     {
         auto glyphs = renderGlyphs( face, text );
@@ -58,8 +68,6 @@ class TextTexture : Tex2D
             m.uv          = null;
             m.horiAdvance = g.advance;
             m.horiBearing = g.bearing;
-            m.vertAdvance = 0;
-            m.vertBearing = vec2i(0,0);
 
             _chars[c] = m;
 

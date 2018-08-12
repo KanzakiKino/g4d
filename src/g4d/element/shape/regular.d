@@ -1,5 +1,9 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.element.shape.regular;
 import g4d.element.base,
        g4d.gl.buffer,
@@ -8,23 +12,28 @@ import g4d.element.base,
 import gl3n.linalg;
 import std.math;
 
-class RegularNgonElement ( size_t N ) : Element
-    if ( N > 0 )
+/// An element of polygons.
+class RegularNgonElement ( size_t _N ) : Element
+    if ( _N >= 3 )
 {
-    alias n = N;
+    /// Length of vertexes.
+    alias N = _N;
 
     protected ArrayBuffer _pos;
 
+    ///
     this ()
     {
         clear();
     }
 
-    override void clear ()
+    ///
+    void clear ()
     {
         _pos = new ArrayBuffer( new float[N*4] );
     }
 
+    ///
     void resize ( float size )
     {
         auto verts = genRegularNgonVertexes( N, size );
@@ -33,16 +42,19 @@ class RegularNgonElement ( size_t N ) : Element
         }
     }
 
-    override void draw ( Shader s )
+    ///
+    void draw ( Shader s )
     {
-        auto saver = ShaderStateSaver( s );
+        const saver = ShaderStateSaver( s );
         s.uploadPositionBuffer( _pos );
         s.applyMatrix();
         s.drawFan( N );
     }
 
+    /// To prove this type.
     enum this_is_a_regular_ngon_class_of_g4d = true;
 }
 
+/// Checks if T is RegularNgonElement.
 enum isRegularNgon(T) =
     __traits(hasMember,T,"this_is_a_regular_ngon_class_of_g4d");

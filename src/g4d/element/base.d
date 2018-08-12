@@ -1,12 +1,19 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.element.base;
 import g4d.shader.base;
 
-// This is an interface of elements.
-// Elements prepare a shader and draw something.
+/// An interface of elements.
+/// Elements prepare a shader and draw something.
 interface Element
 {
+    /// Clears all buffers.
     void clear ();
+
+    /// Draws the element using the shader.
     void draw  ( Shader );
 }

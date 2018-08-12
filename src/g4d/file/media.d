@@ -1,5 +1,11 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+ +
+ + This module declares utilities related to media file.
+++/
 module g4d.file.media;
 import g4d.util.bitmap,
        g4d.exception;
@@ -8,19 +14,23 @@ import gl3n.linalg;
 import std.conv,
        std.string;
 
+///
 class EasyFFException : G4dException
 {
+    ///
     this ( FFError err, string file = __FILE__, size_t line = __LINE__ )
     {
         super( err.to!string, file, line );
     }
 }
 
+/// A class that decodes media file.
 class MediaFile
 {
     protected FFReader* _file;
     protected FFStream* _video;
 
+    ///
     this ( string path )
     {
         _file  = FFReader_new( path.toStringz );
@@ -35,10 +45,12 @@ class MediaFile
         }
     }
 
+    ///
     ~this ()
     {
         dispose();
     }
+    /// Releases all ffmpeg contexts.
     void dispose ()
     {
         if ( _file ) {
@@ -48,8 +60,10 @@ class MediaFile
         _video = null;
     }
 
-    const @property bool hasVideoStream () { return !!_video; }
+    /// Checks if the media file has video/image stream.
+    const @property hasVideoStream () { return !!_video; }
 
+    /// Decodes and returns next image as RGBA bitmap.
     BitmapRGBA decodeNextImage ()
     {
         if ( !hasVideoStream ) {
@@ -63,9 +77,9 @@ class MediaFile
         }
         scope(exit) FFImage_delete( &image );
 
-        auto w   = FFImage_getWidth ( image );
-        auto h   = FFImage_getHeight( image );
-        auto buf = FFImage_getBuffer( image );
+        const w   = FFImage_getWidth ( image );
+        const h   = FFImage_getHeight( image );
+        auto  buf = FFImage_getBuffer( image );
         return new BitmapRGBA( vec2i(w,h), buf );
     }
 }

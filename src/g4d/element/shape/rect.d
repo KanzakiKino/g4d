@@ -1,26 +1,34 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.element.shape.rect;
 import g4d.element.shape.regular,
        g4d.gl.buffer,
        g4d.shader.base;
 import gl3n.linalg;
 
+/// An element of rectangle.
 class RectElement : RegularNgonElement!4
 {
     protected ArrayBuffer _uv;
 
+    ///
     this ()
     {
         super();
     }
 
+    ///
     override void clear ()
     {
         super.clear();
-        _uv = new ArrayBuffer( new float[n*2] );
+        _uv = new ArrayBuffer( new float[N*2] );
     }
 
+    /// UV can be specified.
     void resize ( vec2 sz, vec2 uv = vec2(1f,1f) )
     {
         auto halfW = sz.x/2;
@@ -37,6 +45,7 @@ class RectElement : RegularNgonElement!4
         ]);
     }
 
+    ///
     override void draw ( Shader s )
     {
         if ( s.textureSupport ) {

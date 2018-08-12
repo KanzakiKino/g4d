@@ -1,8 +1,13 @@
-// Written under LGPl-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.glfw.type;
 import g4d.glfw.lib;
 
+///
 enum MouseButton
 {
     Left   = GLFW_MOUSE_BUTTON_1,
@@ -14,6 +19,7 @@ enum MouseButton
     _7     = GLFW_MOUSE_BUTTON_7,
 }
 
+///
 enum Key
 {
     Space         = GLFW_KEY_SPACE        ,
@@ -139,6 +145,7 @@ enum Key
     Menu          = GLFW_KEY_MENU         ,
 }
 
+///
 enum KeyState
 {
     Press   = GLFW_PRESS,

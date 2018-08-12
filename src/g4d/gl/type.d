@@ -1,11 +1,16 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.gl.type;
 import g4d.gl.lib,
        g4d.util.bitmap;
 import std.format;
 
-GLenum toGLType ( T ) ()
+/// Converts vartypes to GLenum.
+GLenum toGLType (T) ()
 {
     static if ( is(T==ubyte) ) {
         return GL_UNSIGNED_BYTE;
@@ -27,6 +32,8 @@ GLenum toGLType ( T ) ()
     }
 }
 
+/// Converts length per pixel to GLenum(pixel format).
+/// Examples: assert( 4.toFormat == GL_RGBA );
 GLenum toFormat ( uint lpp )
 {
     assert( lpp > 0 && lpp <= 4 );
@@ -37,6 +44,8 @@ GLenum toFormat ( uint lpp )
            0;
 }
 
+/// Converts length per pixel to GLenum(compressed pixel format).
+/// Examples: assert( 4.toCompressedFormat == GL_COMPRESSED_RGBA );
 GLenum toCompressedFormat ( uint lpp )
 {
     assert( lpp > 0 && lpp <= 4 );

@@ -1,43 +1,75 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.glfw.handler;
 import g4d.glfw.lib,
        g4d.glfw.type;
 import gl3n.linalg;
 import std.string;
 
+///
 alias WindowMoveHandler    = void delegate ( vec2i );
+///
 alias WindowResizeHandler  = void delegate ( vec2i );
+///
 alias WindowCloseHandler   = void delegate ();
+///
 alias WindowRefreshHandler = void delegate ();
+///
 alias WindowFocusHandler   = void delegate ( bool );
+///
 alias WindowIconifyHandler = void delegate ( bool );
+///
 alias FbResizeHandler      = void delegate ( vec2i );
 
+///
 alias MouseButtonHandler = void delegate ( MouseButton, bool );
+///
 alias MouseMoveHandler   = void delegate ( vec2 );
+///
 alias MouseEnterHandler  = void delegate ( bool );
+///
 alias MouseScrollHandler = void delegate ( vec2 );
+///
 alias KeyHandler         = void delegate ( Key, KeyState );
+///
 alias CharacterHandler   = void delegate ( dchar );
 
+/// A collection of window handlers.
 struct EventHandler
 {
+    /// An exception throwed in handlers is saved here temporary.
     Exception throwedException = null;
 
+    ///
     WindowMoveHandler    onWindowMove    = null;
+    ///
     WindowResizeHandler  onWindowResize  = null;
+    ///
     WindowCloseHandler   onWindowClose   = null;
+    ///
     WindowRefreshHandler onWindowRefresh = null;
+    ///
     WindowFocusHandler   onWindowFocus   = null;
+    ///
     WindowIconifyHandler onWindowIconify = null;
+    ///
     FbResizeHandler      onFbResize      = null;
 
+    ///
     MouseButtonHandler onMouseButton = null;
+    ///
     MouseMoveHandler   onMouseMove   = null;
+    ///
     MouseEnterHandler  onMouseEnter  = null;
+    ///
     MouseScrollHandler onMouseScroll = null;
+    ///
     KeyHandler         onKey         = null;
+    ///
     CharacterHandler   onCharacter   = null;
 
     protected static pure string genFunc ( string handler, string args = "", string hndlargs = "" )
@@ -91,6 +123,7 @@ struct EventHandler
     private static extern(C) GLFWcharfun __c =
         mixin( genFunc( "onCharacter", q{uint c}, q{cast(dchar)c} ) );
 
+    ///
     this ( GLFWwindow* win )
     {
         enforce!glfwSetWindowUserPointer( win, &this );

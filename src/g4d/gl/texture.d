@@ -1,5 +1,9 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 module g4d.gl.texture;
 import g4d.gl.lib,
        g4d.gl.type,
@@ -8,53 +12,78 @@ import g4d.gl.lib,
 import gl3n.linalg;
 import std.conv;
 
+/// A baseclass of OpenGL texture.
 abstract class Texture
 {
     protected static Texture _bindedTexture;
 
-    const GLuint id;
+    /// Invalid texture id.
+    enum NullId = 0;
+
+    protected GLuint _id;
+    /// OpenGL texture id.
+    const @property id () { return _id; }
+
+    /// Size of this texture.
     const vec2i  size;
 
+    /// GL_TEXTURE_2D, etc...
     const pure @property GLenum target ();
 
+    ///
     this ( vec2i sz )
     {
         size = sz;
 
-        GLuint temp;
-        enforce!glGenTextures( 1, &temp );
-        id = temp;
+        enforce!glGenTextures( 1, &_id );
         bind();
 
         enforce!glTexParameteri( target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
         enforce!glTexParameteri( target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     }
 
+    ///
     ~this ()
     {
         dispose();
     }
+    /// Checks if the texture is disposed.
+    const @property disposed ()
+    {
+        return _id == NullId;
+    }
+    /// Deletes the texture.
     void dispose ()
     {
-        enforce!glDeleteTextures( 1, &id );
+        if ( !disposed ) {
+            enforce!glDeleteTextures( 1, &_id );
+        }
+        if ( binded ) {
+            _bindedTexture = null;
+        }
+        _id = NullId;
     }
 
+    /// Checks if the texture is binded.
     const @property binded ()
     {
         return _bindedTexture is this;
     }
-    void bind ()
+    /// Sets the texture binded.
+    const void bind ()
     {
         if ( !binded ) {
             enforce!glBindTexture( target, id );
-            _bindedTexture = this;
+            _bindedTexture = cast(Texture) this;
         }
     }
 }
 
+/// A 2-dimensional texture.
+/// target returns GL_TEXTURE_2D.
 class Tex2D : Texture
 {
-    protected static B resizeBitmapPower2 ( B ) ( B bmp )
+    protected static auto resizeBitmapPower2 (B) ( in B bmp )
         if ( isBitmap!B )
     {
         auto sz = vec2i( bmp.width.nextPower2.to!int,
@@ -62,31 +91,34 @@ class Tex2D : Texture
         return bmp.conservativeResize( sz );
     }
 
+    ///
     override const pure @property GLenum target ()
     {
         return GL_TEXTURE_2D;
     }
 
-    this ( B ) ( B bmp, bool compress = false )
+    ///
+    this (B) ( in B bmp, bool compress = false )
         if ( isBitmap!B )
     {
-        bmp = resizeBitmapPower2( bmp );
+        auto formatted = resizeBitmapPower2( bmp );
 
-        super( bmp.size );
-        enum type = toGLType!(B.bitType);
-        enum lpp  = B.lengthPerPixel;
+        super( formatted.size );
+        enum type = toGLType!(B.Type);
+        enum lpp  = B.LengthPerPixel;
 
         enum  srcFormat = lpp.toFormat;
         const texFormat = compress?
             lpp.toCompressedFormat: srcFormat;
 
         enforce!glTexImage2D( target, 0, texFormat,
-                size.x, size.y, 0, srcFormat, type, bmp.data );
-        bmp.dispose();
+                size.x, size.y, 0, srcFormat, type, formatted.data );
+        formatted.dispose();
     }
 
-    // Cannot compress empty texture
-    // because compressed texture cannot use glTexSubImage2D.
+    /// Creates an empty texture.
+    /// Compressing is not allowed,
+    /// because compressed texture cannot use glTexSubImage2D.
     this ( vec2i sz, uint lpp = 4 )
     {
         super( vec2i( sz.x.nextPower2, sz.y.nextPower2 ) );
@@ -96,16 +128,19 @@ class Tex2D : Texture
                 GL_UNSIGNED_BYTE, null );
     }
 
-    void overwrite ( B ) ( B bmp, vec2i offset = vec2i(0,0) )
+    /// Modifies the texture.
+    void overwrite (B) ( in B bmp, vec2i offset = vec2i(0,0) )
         if ( isBitmap!B )
     {
-        bmp = resizeBitmapPower2( bmp );
+        auto formatted = resizeBitmapPower2( bmp );
+        scope(exit) formatted.dispose();
+
+        enum  type    = toGLType!(B.bitType);
+        enum  format  = B.lengthPerPixel.toFormat;
+        const bmpSize = formatted.size;
 
         bind();
-        enum type   = toGLType!(B.bitType);
-        enum format = B.lengthPerPixel.toFormat;
-        enforce!glTexSubImage2D( target, 0, offset.x.to!int, offset.y.to!int,
-                bmp.width.to!int, bmp.rows.to!int, format, type, bmp.data );
-        bmp.dispose();
+        enforce!glTexSubImage2D( target, 0, offset.x, offset.y,
+                bmpSize.x, bmpSize.y, format, type, formatted.data );
     }
 }

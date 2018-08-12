@@ -1,5 +1,11 @@
-// Written under LGPL-3.0 in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+ +
+ + This module declares utilities related to font.
+++/
 module g4d.ft.font;
 import g4d.ft.lib,
        g4d.util.bitmap,
@@ -8,13 +14,18 @@ import gl3n.linalg;
 import std.conv,
        std.string;
 
+/// A struct of one glyph.
 struct Glyph
 {
+    /// Bitmap of the glyph.
     BitmapA bmp;
+    /// Size of moving from origin.
     vec2i   bearing;
+    /// Width of collision.
     size_t  advance;
 }
 
+/// An object of Font.
 class Font
 {
     protected static FT_Library _library;
@@ -29,6 +40,7 @@ class Font
 
     protected FT_Face _face;
 
+    ///
     this ( string path )
     {
         initLibrary();
@@ -36,6 +48,7 @@ class Font
 
         enforce!FT_New_Face( _library, path.toStringz, 0, &_face );
     }
+    ///
     ~this ()
     {
         enforce!FT_Done_Face( _face );
@@ -45,6 +58,7 @@ class Font
         }
     }
 
+    /// Renders the character.
     Glyph render ( vec2i sz, dchar c )
     {
         enforce!FT_Set_Pixel_Sizes( _face, sz.x.to!uint, sz.y.to!uint );
@@ -64,24 +78,28 @@ class Font
     }
 }
 
+/// An object of font face. Font face knows its size.
 class FontFace
 {
-    protected Font   _font;
-    @property ref font () { return _font; }
+    protected Font _font;
+    /// Font.
+    const @property font () { return _font; }
 
-    protected vec2i _size;
-    @property ref size () { return _size; }
+    /// Size of the Font.
+    const vec2i size;
 
+    ///
     this ( Font f, vec2i s )
     {
         if ( s.x == 0 ) s.x = s.y;
         if ( s.y == 0 ) s.y = s.x;
         _font = f;
-        _size = s;
+        size  = s;
     }
 
+    /// Renders the character.
     Glyph render ( dchar c )
     {
-        return _font.render( _size, c );
+        return _font.render( size, c );
     }
 }

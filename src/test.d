@@ -1,5 +1,9 @@
-// Written without lICENSE in the D programming language.
-// Copyright 2018 KanzakiKino
+// Written in the D programming language.
+/++
+ + Authors: KanzakiKino
+ + Copyright: KanzakiKino 2018
+ + License: LGPL-3.0
+++/
 import g4d;
 import std.digest.sha,
        std.conv;
