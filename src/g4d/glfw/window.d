@@ -105,6 +105,7 @@ class Window
     }
 
     /// Prepares the window to draw.
+    /// This method doesn't clear the buffers.
     /// The saved exception at handler will be throwed from here.
     void resetFrame ()
     {
@@ -116,7 +117,6 @@ class Window
 
         auto size = size;
         enforce!glViewport( 0,0, size.x, size.y );
-        enforce!glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     }
     /// Swaps the back and front buffers.
     void applyFrame ()

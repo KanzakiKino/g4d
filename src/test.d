@@ -66,12 +66,15 @@ class Game
             _win.pollEvents();
             _win.resetFrame();
 
-            _text.loadText( _face, getText() );
+            ColorBuffer.clear();
+            DepthBuffer.clear();
 
             StencilBuffer.clear( 1 );
             StencilBuffer.startModify( 0 );
             ColorBuffer.mask( false, false, false, false );
             DepthBuffer.mask( false );
+
+            _text.loadText( _face, getText() );
 
             _textShader.use();
             _textShader.initVectors();
