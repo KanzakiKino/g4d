@@ -42,7 +42,7 @@ class Game
     {
         auto halfW = sz.x/2;
         auto halfH = sz.y/2;
-        auto proj  = mat4.orthographic( -halfW, halfW, halfH, -halfH, short.min, short.max );
+        auto proj  = mat4.orthographic( -halfW, halfW, -halfH, halfH, short.min, short.max );
 
         _textShader.projection = proj;
         _rectShader.projection = proj;
@@ -58,17 +58,34 @@ class Game
     void exec ()
     {
         _win.show();
-        ulong frame = 0;
+
+        StencilBuffer.enable();
+        DepthBuffer  .enable();
+
         while ( _win.alive ) {
             _win.pollEvents();
             _win.resetFrame();
 
             _text.loadText( _face, getText() );
 
+            StencilBuffer.clear( 1 );
+            StencilBuffer.startModify( 0 );
+            ColorBuffer.mask( false, false, false, false );
+            DepthBuffer.mask( false );
+
             _textShader.use();
             _textShader.initVectors();
             _textShader.color = vec4(1,1,1,1);
             _text.draw( _textShader );
+
+            StencilBuffer.startTest();
+            ColorBuffer.mask( true, true, true, true );
+            DepthBuffer.mask( true );
+
+            _rectShader.use();
+            _rectShader.initVectors();
+            _rectShader.color = vec4(1,0,0,1);
+            _rc.draw( _rectShader );
 
             _win.applyFrame();
         }

@@ -4,12 +4,11 @@
  + Copyright: KanzakiKino 2018
  + License: LGPL-3.0
 ++/
-module g4d.gl.stencil;
+module g4d.gl.stencilbuf;
 import g4d.gl.lib;
-import std.conv;
 
 /// A manager of the stencil buffer.
-struct Stencil
+struct StencilBuffer
 {
     ///
     this () @disable;
@@ -26,31 +25,23 @@ struct Stencil
     }
 
     /// Clears the stencil buffer.
-    static void resetBuffer ( bool onlyStencil = true, bool invert = false )
+    static void clear ( int def = 0 )
     {
-        auto def = invert? 1: 0;
-        auto rep = invert? 0: 1;
-
-        enable();
         enforce!glClearStencil( def );
         enforce!glClear( GL_STENCIL_BUFFER_BIT );
-
-        enforce!glStencilFunc( GL_ALWAYS, rep, 1 );
-        enforce!glStencilOp( GL_REPLACE, GL_REPLACE, GL_REPLACE );
-
-        if ( onlyStencil ) {
-            enforce!glColorMask(false,false,false,false);
-            enforce!glDepthMask(false);
-        }
     }
-    /// Applies stencil buffer,
-    /// And activates color and depth buffers.
-    static void applyBuffer ()
-    {
-        enforce!glColorMask(true,true,true,true);
-        enforce!glDepthMask(true);
 
+    /// Sets a stencil func to replace pixels.
+    static void startModify ( int replace = 1 )
+    {
+        enforce!glStencilFunc( GL_ALWAYS, replace, 1 );
+        enforce!glStencilOp( GL_REPLACE, GL_REPLACE, GL_REPLACE );
+    }
+
+    /// Sets a stencil func to test if the pixel is equal to success condition.
+    static void startTest ( int successCondition = 1 )
+    {
         enforce!glStencilOp( GL_KEEP, GL_KEEP, GL_KEEP );
-        enforce!glStencilFunc( GL_EQUAL, 1, 1 );
+        enforce!glStencilFunc( GL_EQUAL, successCondition, 1 );
     }
 }

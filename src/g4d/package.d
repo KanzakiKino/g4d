@@ -16,7 +16,9 @@ public
     import g4d.ft.font,
            g4d.ft.texture;
     import g4d.gl.buffer,
-           g4d.gl.stencil,
+           g4d.gl.colorbuf,
+           g4d.gl.depthbuf,
+           g4d.gl.stencilbuf,
            g4d.gl.texture;
     import g4d.glfw.cursor,
            g4d.glfw.type,
