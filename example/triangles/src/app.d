@@ -12,7 +12,7 @@ class App
     protected vec3[50] pos;
 
     protected mat4 projection;
-    protected vec3 rotation;
+    protected vec2 rotation;
 
     this ()
     {
@@ -27,8 +27,8 @@ class App
         }
 
         projection = mat4.orthographic(
-                -320, 320, 240, -240, short.min, short.max );
-        rotation = vec3(0,0,0);
+                -320, 320, -240, 240, short.min, short.max );
+        rotation = vec2(0,0);
 
         win.handler.onMouseMove = delegate ( vec2 pt )
         {
@@ -48,7 +48,7 @@ class App
             shader.use();
             shader.color = vec4(1f,1f,1f,0.3f);
             shader.projection = projection *
-                mat4.rotation( rotation.x, rotation.y, rotation.z );
+                mat4.xrotation( rotation.x ) * mat4.yrotation( rotation.y );
             foreach ( v; pos ) {
                 shader.setVectors( v );
                 triangle.draw( shader );
