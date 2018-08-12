@@ -40,17 +40,23 @@ class App
 
     int exec ()
     {
+        DepthBuffer.enable();
+        ColorBuffer.enableBlend();
+
         while ( win.alive )
         {
             win.pollEvents();
             win.resetFrame();
 
+            ColorBuffer.clear();
+            DepthBuffer.clear();
+
             shader.use();
             shader.color = vec4(1f,1f,1f,0.3f);
-            shader.projection = projection *
-                mat4.xrotation( rotation.x ) * mat4.yrotation( rotation.y );
+            shader.matrix.projection = projection *
+                mat4.xrotation(rotation.x) * mat4.yrotation(rotation.y);
             foreach ( v; pos ) {
-                shader.setVectors( v );
+                shader.matrix.late = v;
                 triangle.draw( shader );
             }
 
