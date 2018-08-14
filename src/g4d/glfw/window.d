@@ -27,12 +27,15 @@ enum WindowHint
 /// Initializing GLFW will be executed automatically if it's necessary.
 class Window
 {
-    private static this ()
+    private static __gshared bool _loadedLibraries = false;
+    private static loadLibraries ()
     {
-        initGLFW();
-        initGL();
-
-        Cursor.createStandardCursors();
+        if ( !_loadedLibraries ) {
+            initGLFW();
+            initGL();
+            Cursor.createStandardCursors();
+        }
+        _loadedLibraries = true;
     }
 
     /// Handles events of all window.
@@ -49,6 +52,8 @@ class Window
     ///
     this ( vec2i sz, string text, int hint = WindowHint.None )
     {
+        loadLibraries();
+
         enforce!glfwWindowHint( GLFW_RESIZABLE, hint & WindowHint.Resizable );
         enforce!glfwWindowHint(   GLFW_VISIBLE, hint & WindowHint.Visible   );
         enforce!glfwWindowHint(  GLFW_FLOATING, hint & WindowHint.Floating  );
