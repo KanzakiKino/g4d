@@ -25,7 +25,7 @@ abstract class Texture
     const @property id () { return _id; }
 
     /// Size of this texture.
-    const vec2i  size;
+    immutable vec2i size;
 
     /// GL_TEXTURE_2D, etc...
     const pure @property GLenum target ();
