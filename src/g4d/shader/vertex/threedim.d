@@ -30,6 +30,11 @@ template ThreeDimVertexShader ()
         _matrixLoc = getUniformLoc( "matrix" );
         _posLoc    = getAttribLoc( "pos" );
         _uvLoc     = getAttribLoc( "uv" );
+
+        enforce!glEnableVertexAttribArray( _posLoc );
+        if ( textureSupport ) {
+            enforce!glEnableVertexAttribArray( _uvLoc );
+        }
     }
 
     override const @property bool textureSupport ()
@@ -45,14 +50,12 @@ template ThreeDimVertexShader ()
     override void uploadPositionBuffer ( in ArrayBuffer buf )
     {
         buf.bind();
-        enforce!glEnableVertexAttribArray( _posLoc );
         enforce!glVertexAttribPointer( _posLoc, 4, GL_FLOAT, GL_FALSE, 0, null );
     }
     override void uploadUvBuffer ( in ArrayBuffer buf )
     {
         if ( textureSupport ) {
             buf.bind();
-            enforce!glEnableVertexAttribArray( _uvLoc );
             enforce!glVertexAttribPointer( _uvLoc, 2, GL_FLOAT, GL_FALSE, 0, null );
         } else {
             super.uploadUvBuffer( buf );

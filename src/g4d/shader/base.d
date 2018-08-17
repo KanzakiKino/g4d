@@ -70,11 +70,11 @@ abstract class Shader
         if ( status == GL_FALSE ) {
             ShaderException.throwProgramLog( _program );
         }
-        initVertexShader();
-        initFragShader();
-
         enforce!glGenVertexArrays( 1, &_vao );
         use();
+
+        initVertexShader();
+        initFragShader();
     }
 
     ///
