@@ -95,3 +95,23 @@ class ArrayBuffer : Buffer
         super.overwrite( T.sizeof*buf.length, buf.ptr, T.sizeof*offset );
     }
 }
+
+/// A buffer for element array data.
+/// target property returns GLL_ELEMENT_ARRAY_BUFFER.
+class ElementArrayBuffer : ArrayBuffer
+{
+    ///
+    alias BufferType = ushort;
+
+    ///
+    override const pure @property GLenum target ()
+    {
+        return GL_ELEMENT_ARRAY_BUFFER;
+    }
+
+    ///
+    this ( BufferType[] buf )
+    {
+        super( buf );
+    }
+}

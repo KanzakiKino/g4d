@@ -8,6 +8,7 @@ module g4d.shader.base;
 import g4d.gl.buffer,
        g4d.gl.lib,
        g4d.gl.texture,
+       g4d.gl.type,
        g4d.shader.matrix,
        g4d.exception;
 import gl3n.linalg;
@@ -153,6 +154,21 @@ abstract class Shader
     void drawStrip ( size_t polyCnt )
     {
         enforce!glDrawArrays( GL_TRIANGLE_STRIP, 0, polyCnt.to!int );
+    }
+
+    /// Calls glDrawElements with GL_TRIANGLE_FAN.
+    void drawElementsFan ( ElementArrayBuffer buf, size_t polyCnt )
+    {
+        buf.bind();
+        enum type = toGLType!(buf.BufferType);
+        enforce!glDrawElements( GL_TRIANGLE_FAN, polyCnt.to!int, type, null );
+    }
+    /// Calls glDrawElements with GL_TRIANGLE_STRIP.
+    void drawElementsStrip ( ElementArrayBuffer buf, size_t polyCnt )
+    {
+        buf.bind();
+        enum type = toGLType!(buf.BufferType);
+        enforce!glDrawElements( GL_TRIANGLE_STRIP, polyCnt.to!int, type, null );
     }
 }
 
