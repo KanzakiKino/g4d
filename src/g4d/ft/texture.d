@@ -24,8 +24,9 @@ class TextTexture : Tex2D
     {
         /// Size in pixel.
         vec2i size;
-        /// UV buffer.
-        ArrayBuffer uv;
+        /// UV coordinates.
+        /// [left,top, right,top, right,bottom, left,bottom,]
+        float[8] uv;
 
         /// Width of collision.
         ulong horiAdvance;
@@ -74,9 +75,9 @@ class TextTexture : Tex2D
             right  = pos*1f / size.x;
             bottom = m.size.y*1f / size.y;
 
-            m.uv = new ArrayBuffer([
+            m.uv = [
                 left,top, right,top, right,bottom, left,bottom,
-            ]);
+            ];
 
             _chars[c] = m;
             g.bmp.dispose();

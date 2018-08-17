@@ -13,6 +13,7 @@ import g4d.element.base,
        g4d.exception;
 import gl3n.linalg;
 import std.algorithm,
+       std.conv,
        std.math;
 
 /// A struct of character polygon.
@@ -27,14 +28,19 @@ class HTextElement : Element
 {
     protected struct Poly
     {
-        dchar       c;
-        vec2        pos;
-        float       length;
-        ArrayBuffer posBuf;
+        dchar c;
+        vec2  pos;
+        float length;
     }
 
     protected Poly[]      _polys;
     protected TextTexture _texture;
+
+    protected size_t _polyCnt;
+
+    protected ElementArrayBuffer _indicesBuf;
+    protected ArrayBuffer        _posBuf;
+    protected ArrayBuffer        _uvBuf;
 
     /// Polygons to be drawn.
     const @property polys () { return _polys; }
@@ -62,14 +68,20 @@ class HTextElement : Element
     void loadText ( FontFace face, dstring text )
     {
         clear();
+        if ( text == "" ) return;
+
         _texture = new TextTexture( face, text );
+
+        float[] posarr, uvarr;
+        ushort[] indices;
 
         auto  curpos   = vec2(0,0);
         const fontsize = face.size.y;
 
-        float left, top, right, bottom;
+        float  left, top, right, bottom;
+        size_t first;
 
-        foreach ( c; text ) {
+        foreach ( i,c; text ) {
             const metrics = _texture.chars[c];
             auto  poly    = Poly(c);
 
@@ -78,21 +90,36 @@ class HTextElement : Element
             right  = left + metrics.size.x;
             bottom = top - metrics.size.y;
 
-            _size.x = max( right, _size.x );
-            _size.y = max( bottom.abs, _size.y );
-
             poly.pos    = vec2( left, top );
             poly.length = metrics.horiAdvance;
-            poly.posBuf = new ArrayBuffer([
+
+            posarr ~= [
                 left ,top   ,0f,1f,
                 right,top   ,0f,1f,
                 right,bottom,0f,1f,
                 left ,bottom,0f,1f,
-            ]);
+            ];
+            uvarr ~= metrics.uv;
+
+            first = i*4;
+            indices ~= [
+                first+0, first+0, // Degenerated
+                first+0, first+3, first+1, first+2,
+                first+2, // Degenerated
+            ].to!(ushort[]);
+
+            _size.x = max( right, _size.x );
+            _size.y = max( bottom.abs, _size.y );
 
             _polys   ~= poly;
             curpos.x += metrics.horiAdvance;
         }
+        indices ~= (first+2).to!ushort;
+
+        _polyCnt    = indices.length - 2;
+        _indicesBuf = new ElementArrayBuffer( indices );
+        _posBuf     = new ArrayBuffer( posarr );
+        _uvBuf      = new ArrayBuffer( uvarr  );
     }
 
     ///
@@ -104,14 +131,8 @@ class HTextElement : Element
         const saver = ShaderStateSaver(s);
         s.applyMatrix();
         s.uploadTexture( _texture );
-
-        foreach ( p; _polys ) {
-            auto uv  = _texture.chars[p.c].uv;
-            auto pos = p.posBuf;
-
-            s.uploadUvBuffer( uv );
-            s.uploadPositionBuffer( pos );
-            s.drawFan( 4 );
-        }
+        s.uploadUvBuffer( _uvBuf );
+        s.uploadPositionBuffer( _posBuf );
+        s.drawElementsStrip( _indicesBuf, _polyCnt );
     }
 }
