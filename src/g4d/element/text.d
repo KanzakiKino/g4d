@@ -8,6 +8,7 @@ module g4d.element.text;
 import g4d.element.base,
        g4d.ft.font,
        g4d.ft.texture,
+       g4d.gl.array,
        g4d.gl.buffer,
        g4d.shader.base,
        g4d.exception;
@@ -68,18 +69,20 @@ class HTextElement : Element
     void loadText ( FontFace face, dstring text )
     {
         clear();
-        if ( text == "" ) return;
+        if ( !text.length ) return;
 
         _texture = new TextTexture( face, text );
 
-        float[] posarr, uvarr;
-        ushort[] indices;
+        const len     = text.length;
+        auto  posarr  = new float[len*4*4];
+        auto  uvarr   = new float[len*4*2];
+        auto  indices = new ushort[len*7+1];
 
         auto  curpos   = vec2(0,0);
         const fontsize = face.size.y;
 
         float  left, top, right, bottom;
-        size_t first;
+        size_t first, temp;
 
         foreach ( i,c; text ) {
             const metrics = _texture.chars[c];
@@ -93,16 +96,16 @@ class HTextElement : Element
             poly.pos    = vec2( left, top );
             poly.length = metrics.horiAdvance;
 
-            posarr ~= [
-                left ,top   ,0f,1f,
-                right,top   ,0f,1f,
-                right,bottom,0f,1f,
-                left ,bottom,0f,1f,
-            ];
-            uvarr ~= metrics.uv;
-
             first = i*4;
-            indices ~= [
+            temp  = first*4;
+            posarr[temp .. temp+4*4] =
+                createRectVertexPos( left,top,right,bottom );
+
+            temp = first*2;
+            uvarr[temp .. temp+4*2] = metrics.uv;
+
+            temp = i*7;
+            indices[temp .. temp+7] = [
                 first+0, first+0, // Degenerated
                 first+0, first+3, first+1, first+2,
                 first+2, // Degenerated
@@ -114,7 +117,7 @@ class HTextElement : Element
             _polys   ~= poly;
             curpos.x += metrics.horiAdvance;
         }
-        indices ~= (first+2).to!ushort;
+        indices[$-1] = (first+2).to!ushort;
 
         _polyCnt    = indices.length - 2;
         _indicesBuf = new ElementArrayBuffer( indices );

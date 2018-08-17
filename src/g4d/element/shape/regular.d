@@ -24,13 +24,13 @@ class RegularNgonElement ( size_t _N ) : Element
     ///
     this ()
     {
-        clear();
+        _pos = new ArrayBuffer( new float[N*4] );
     }
 
     ///
     void clear ()
     {
-        _pos = new ArrayBuffer( new float[N*4] );
+        _pos.overwrite( new float[N*4] );
     }
 
     ///

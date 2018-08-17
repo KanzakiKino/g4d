@@ -6,6 +6,7 @@
 ++/
 module g4d.element.shape.rect;
 import g4d.element.shape.regular,
+       g4d.gl.array,
        g4d.gl.buffer,
        g4d.shader.base;
 import gl3n.linalg;
@@ -19,13 +20,14 @@ class RectElement : RegularNgonElement!4
     this ()
     {
         super();
+        _uv = new ArrayBuffer( new float[N*2] );
     }
 
     ///
     override void clear ()
     {
         super.clear();
-        _uv = new ArrayBuffer( new float[N*2] );
+        _uv.overwrite( new float[N*2] );
     }
 
     /// UV can be specified.
@@ -34,15 +36,10 @@ class RectElement : RegularNgonElement!4
         auto halfW = sz.x/2;
         auto halfH = sz.y/2;
 
-        _pos.overwrite([
-            -halfW,  halfH, 0, 1,
-             halfW,  halfH, 0, 1,
-             halfW, -halfH, 0, 1,
-            -halfW, -halfH, 0, 1,
-        ]);
-        _uv.overwrite([
-            0f,0f, uv.x,0f, uv.x,uv.y, 0f,uv.y,
-        ]);
+        _pos.overwrite( createRectVertexPos(
+                    -halfW, -halfH, halfW, halfH ) );
+        _uv.overwrite( createRectVertexUv(
+                    0f, 0f, uv.x, uv.y ) );
     }
 
     ///
