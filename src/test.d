@@ -61,6 +61,7 @@ class Game
 
         StencilBuffer.enable();
         DepthBuffer  .enable();
+        ColorBuffer  .enableBlend();
 
         while ( _win.alive ) {
             _win.pollEvents();
@@ -69,10 +70,10 @@ class Game
             ColorBuffer.clear();
             DepthBuffer.clear();
 
-            StencilBuffer.clear( 1 );
-            StencilBuffer.startModify( 0 );
-            ColorBuffer.mask( false, false, false, false );
-            DepthBuffer.mask( false );
+//            StencilBuffer.clear( 1 );
+//            StencilBuffer.startModify( 0 );
+//            ColorBuffer.mask( false, false, false, false );
+//            DepthBuffer.mask( false );
 
             _text.loadText( _face, getText() );
 
@@ -81,14 +82,14 @@ class Game
             _textShader.color = vec4(1,1,1,1);
             _text.draw( _textShader );
 
-            StencilBuffer.startTest();
-            ColorBuffer.mask( true, true, true, true );
-            DepthBuffer.mask( true );
-
-            _rectShader.use();
-            _rectShader.matrix.late = vec3(50,0,0);
-            _rectShader.color = vec4(1,0,0,1);
-            _rc.draw( _rectShader );
+//            StencilBuffer.startTest();
+//            ColorBuffer.mask( true, true, true, true );
+//            DepthBuffer.mask( true );
+//
+//            _rectShader.use();
+//            _rectShader.matrix.late = vec3(50,0,0);
+//            _rectShader.color = vec4(1,0,0,1);
+//            _rc.draw( _rectShader );
 
             _win.applyFrame();
         }
