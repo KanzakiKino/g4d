@@ -20,9 +20,9 @@ struct Glyph
     /// Bitmap of the glyph.
     BitmapA bmp;
     /// Size of moving from origin.
-    vec2i   bearing;
+    vec2i bearing;
     /// Width of collision.
-    size_t  advance;
+    size_t advance;
 }
 
 /// An object of Font.
@@ -58,6 +58,36 @@ class Font
         }
     }
 
+    protected Glyph createGlyph ( bool needbmp = true )
+    {
+        Glyph g;
+
+        BitmapA bmp = null;
+        if ( needbmp ) {
+            auto ftbmp = _face.glyph.bitmap;
+            auto size  = vec2i(
+                    ftbmp.width.to!int, ftbmp.rows.to!int );
+            bmp = new BitmapA( size, ftbmp.buffer );
+        }
+
+        auto metrics = _face.glyph.metrics;
+        auto bearing = vec2i( metrics.horiBearingX.to!int/64,
+                metrics.horiBearingY.to!int/64 );
+
+        return Glyph( bmp, bearing, metrics.horiAdvance/64 );
+    }
+
+    /// Retrieves metrics only.
+    Glyph retrieveMetrics ( vec2i sz, dchar c )
+    {
+        enforce!FT_Set_Pixel_Sizes( _face, sz.x.to!uint, sz.y.to!uint );
+
+        auto index = FT_Get_Char_Index( _face, c );
+        enforce!FT_Load_Glyph( _face, index, FT_LOAD_NO_BITMAP );
+
+        return createGlyph( false );
+    }
+
     /// Renders the character.
     Glyph render ( vec2i sz, dchar c )
     {
@@ -66,15 +96,7 @@ class Font
         auto index = FT_Get_Char_Index( _face, c );
         enforce!FT_Load_Glyph( _face, index, FT_LOAD_RENDER );
 
-        auto ftbmp = _face.glyph.bitmap;
-        auto size  = vec2i( ftbmp.width.to!int, ftbmp.rows.to!int );
-        auto bmp   = new BitmapA( size, ftbmp.buffer );
-
-        auto metrics = _face.glyph.metrics;
-        auto bearing = vec2i( metrics.horiBearingX.to!int/64,
-                metrics.horiBearingY.to!int/64 );
-
-        return Glyph( bmp, bearing, metrics.horiAdvance/64 );
+        return createGlyph( true );
     }
 }
 
@@ -95,6 +117,12 @@ class FontFace
         if ( s.y == 0 ) s.y = s.x;
         _font = f;
         size  = s;
+    }
+
+    /// Retrieves the metrics.
+    Glyph retrieveMetrics ( dchar c )
+    {
+        return _font.retrieveMetrics( size, c );
     }
 
     /// Renders the character.
