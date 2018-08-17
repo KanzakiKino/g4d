@@ -6,11 +6,6 @@ varying vec2      v_uv;
 
 void main ()
 {
-    float alpha = texture( image, v_uv ).r;
-
-    if ( alpha == 0 ) {
-        discard;
-    }
-    gl_FragColor = vec4( color.rgb, alpha*color.a );
+    gl_FragColor = vec4( color.rgb, texture( image, v_uv )*color.a );
 }
 

@@ -60,38 +60,31 @@ class Game
         _win.show();
 
         StencilBuffer.enable();
-        DepthBuffer  .enable();
+        DepthBuffer  .disable();
         ColorBuffer  .enableBlend();
 
+        size_t frame = 0;
         while ( _win.alive ) {
             _win.pollEvents();
             _win.resetFrame();
 
             ColorBuffer.clear();
-            DepthBuffer.clear();
 
-//            StencilBuffer.clear( 1 );
-//            StencilBuffer.startModify( 0 );
-//            ColorBuffer.mask( false, false, false, false );
-//            DepthBuffer.mask( false );
+            _rectShader.use();
+            _rectShader.matrix.late = vec3(50,0,0);
+            _rectShader.color = vec4(1,0,0,1);
+            _rc.draw( _rectShader );
 
-            _text.loadText( _face, getText() );
-
+            if ( !(frame%30) ) {
+                _text.loadText( _face, getText() );
+            }
             _textShader.use();
             _textShader.matrix.late = vec3(0,0,0);
             _textShader.color = vec4(1,1,1,1);
             _text.draw( _textShader );
 
-//            StencilBuffer.startTest();
-//            ColorBuffer.mask( true, true, true, true );
-//            DepthBuffer.mask( true );
-//
-//            _rectShader.use();
-//            _rectShader.matrix.late = vec3(50,0,0);
-//            _rectShader.color = vec4(1,0,0,1);
-//            _rc.draw( _rectShader );
-
             _win.applyFrame();
+            frame++;
         }
     }
 }
