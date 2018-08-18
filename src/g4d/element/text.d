@@ -17,13 +17,6 @@ import std.algorithm,
        std.conv,
        std.math;
 
-/// A struct of character polygon.
-private struct CharPoly
-{
-    ArrayBuffer pos;
-    ArrayBuffer uv;
-}
-
 /// An element that draws text horizontally.
 class HTextElement : Element
 {
