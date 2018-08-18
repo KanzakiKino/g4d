@@ -54,6 +54,9 @@ class HTextElement : Element
     this ()
     {
         clear();
+        _indicesBuf = new ElementArrayBuffer( [] );
+        _posBuf     = new ArrayBuffer( [] );
+        _uvBuf      = new ArrayBuffer( [] );
     }
 
     ///
@@ -64,9 +67,6 @@ class HTextElement : Element
         _size    = vec2(0,0);
 
         _polyCnt    = 0;
-        _indicesBuf = null;
-        _posBuf     = null;
-        _uvBuf      = null;
     }
 
     /// Renders the text texture,
@@ -124,10 +124,10 @@ class HTextElement : Element
         }
         indices[$-1] = (first+2).to!ushort;
 
-        _polyCnt    = indices.length - 2;
-        _indicesBuf = new ElementArrayBuffer( indices );
-        _posBuf     = new ArrayBuffer( posarr );
-        _uvBuf      = new ArrayBuffer( uvarr  );
+        _polyCnt   = indices.length - 2;
+        _indicesBuf.realloc( indices );
+        _posBuf    .realloc( posarr  );
+        _uvBuf     .realloc( uvarr   );
     }
 
     ///

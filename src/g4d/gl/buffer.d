@@ -34,7 +34,7 @@ abstract class Buffer
     {
         enforce!glGenBuffers( 1, &_id );
         bind();
-        enforce!glBufferData( target, sz, ptr, usage );
+        realloc( ptr, sz, usage );
     }
 
     ///
@@ -72,7 +72,13 @@ abstract class Buffer
         }
     }
 
-    protected void overwrite ( size_t sz, in void* ptr, size_t offset = 0 )
+    protected void realloc ( in void* ptr, size_t sz, BufferUsage usage )
+    {
+        bind();
+        enforce!glBufferData( target, sz, ptr, usage );
+    }
+
+    protected void overwrite ( in void* ptr, size_t sz, size_t offset )
     {
         bind();
         enforce!glBufferSubData( target, offset, sz, ptr );
@@ -96,10 +102,16 @@ class ArrayBuffer : Buffer
         super( buf.ptr, size, usage );
     }
 
+    /// Reallocates the buffer.
+    void realloc (T) ( in T[] buf, BufferUsage usage = BufferUsage.StaticDraw )
+    {
+        super.realloc( buf.ptr, T.sizeof*buf.length, usage );
+    }
+
     /// Modifies the buffer.
     void overwrite (T) ( in T[] buf, size_t offset = 0 )
     {
-        super.overwrite( T.sizeof*buf.length, buf.ptr, T.sizeof*offset );
+        super.overwrite( buf.ptr, T.sizeof*buf.length, T.sizeof*offset );
     }
 }
 
