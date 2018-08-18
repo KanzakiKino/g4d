@@ -20,7 +20,8 @@ class RectElement : RegularNgonElement!4
     this ()
     {
         super();
-        _uv = new ArrayBuffer( new float[N*2] );
+        _uv = new ArrayBuffer( new float[N*2],
+               BufferUsage.DynamicDraw );
     }
 
     ///

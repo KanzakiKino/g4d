@@ -7,6 +7,13 @@
 module g4d.gl.buffer;
 import g4d.gl.lib;
 
+/// An enum of buffer usages.
+enum BufferUsage
+{
+    StaticDraw  = GL_STATIC_DRAW,
+    DynamicDraw = GL_DYNAMIC_DRAW,
+}
+
 /// A baseclass of OpenGL buffers.
 abstract class Buffer
 {
@@ -23,11 +30,11 @@ abstract class Buffer
     const pure @property GLenum target ();
 
     ///
-    this ( void* ptr, size_t sz )
+    this ( void* ptr, size_t sz, BufferUsage usage )
     {
         enforce!glGenBuffers( 1, &_id );
         bind();
-        enforce!glBufferData( target, sz, ptr, GL_STATIC_DRAW );
+        enforce!glBufferData( target, sz, ptr, usage );
     }
 
     ///
@@ -83,10 +90,10 @@ class ArrayBuffer : Buffer
     }
 
     ///
-    this (T) ( T[] buf )
+    this (T) ( T[] buf, BufferUsage usage = BufferUsage.StaticDraw )
     {
         size_t size = T.sizeof*buf.length;
-        super( buf.ptr, size );
+        super( buf.ptr, size, usage );
     }
 
     /// Modifies the buffer.
@@ -110,8 +117,8 @@ class ElementArrayBuffer : ArrayBuffer
     }
 
     ///
-    this ( BufferType[] buf )
+    this ( BufferType[] buf, BufferUsage usage = BufferUsage.StaticDraw )
     {
-        super( buf );
+        super( buf, usage );
     }
 }

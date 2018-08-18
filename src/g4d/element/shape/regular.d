@@ -24,7 +24,8 @@ class RegularNgonElement ( size_t _N ) : Element
     ///
     this ()
     {
-        _pos = new ArrayBuffer( new float[N*4] );
+        _pos = new ArrayBuffer( new float[N*4],
+               BufferUsage.DynamicDraw );
     }
 
     ///
