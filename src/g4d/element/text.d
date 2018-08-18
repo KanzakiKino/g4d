@@ -62,6 +62,11 @@ class HTextElement : Element
         _polys   = [];
         _texture = null;
         _size    = vec2(0,0);
+
+        _polyCnt    = 0;
+        _indicesBuf = null;
+        _posBuf     = null;
+        _uvBuf      = null;
     }
 
     /// Renders the text texture,
