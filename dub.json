@@ -31,7 +31,9 @@
             "targetType": "staticLibrary",
 
             "copyFiles-windows-x86"   : ["./lib/windows-x86/*.dll"],
-            "copyFiles-windows-x86_64": ["./lib/windows-x86_64/*.dll"]
+            "copyFiles-windows-x86_64": ["./lib/windows-x86_64/*.dll"],
+
+            "excludedSourceFiles": ["./src/test.d"]
         },
         {
             "name": "unittest",
