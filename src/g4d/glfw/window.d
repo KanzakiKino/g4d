@@ -16,11 +16,14 @@ import std.conv,
 /// Hints of Window.
 enum WindowHint
 {
-    None      = 0x0000,
-    Resizable = 0b0001,
-    Maximized = 0b0010,
-    Floating  = 0b0100,
-    Visible   = 0b1000,
+    None        = 0b0000000,
+    Resizable   = 0b0000001,
+    Visible     = 0b0000010,
+    Decorated   = 0b0000100,
+    Focused     = 0b0001000,
+    AutoIconify = 0b0010000,
+    Floating    = 0b0100000,
+    Maximized   = 0b1000000,
 }
 
 /// A class of GLFWwindow.
@@ -54,10 +57,13 @@ class Window
     {
         loadLibraries();
 
-        enforce!glfwWindowHint( GLFW_RESIZABLE, hint & WindowHint.Resizable );
-        enforce!glfwWindowHint(   GLFW_VISIBLE, hint & WindowHint.Visible   );
-        enforce!glfwWindowHint(  GLFW_FLOATING, hint & WindowHint.Floating  );
-        enforce!glfwWindowHint( GLFW_MAXIMIZED, hint & WindowHint.Maximized );
+        enforce!glfwWindowHint(    GLFW_RESIZABLE, hint & WindowHint.Resizable   );
+        enforce!glfwWindowHint(      GLFW_VISIBLE, hint & WindowHint.Visible     );
+        enforce!glfwWindowHint(    GLFW_DECORATED, hint & WindowHint.Decorated   );
+        enforce!glfwWindowHint(      GLFW_FOCUSED, hint & WindowHint.Focused     );
+        enforce!glfwWindowHint( GLFW_AUTO_ICONIFY, hint & WindowHint.AutoIconify );
+        enforce!glfwWindowHint(     GLFW_FLOATING, hint & WindowHint.Floating    );
+        enforce!glfwWindowHint(    GLFW_MAXIMIZED, hint & WindowHint.Maximized   );
 
         enforce!glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
         enforce!glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
