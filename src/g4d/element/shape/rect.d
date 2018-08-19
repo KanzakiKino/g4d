@@ -38,7 +38,7 @@ class RectElement : RegularNgonElement!4
         auto halfH = sz.y/2;
 
         _pos.overwrite( createRectVertexPos(
-                    -halfW, -halfH, halfW, halfH ) );
+                    -halfW, halfH, halfW, -halfH ) );
         _uv.overwrite( createRectVertexUv(
                     0f, 0f, uv.x, uv.y ) );
     }
