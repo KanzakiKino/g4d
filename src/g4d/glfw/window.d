@@ -176,6 +176,19 @@ class Window
                 _window, cast(GLFWcursor*)c.ptr );
     }
 
+    /// Clipboard text.
+    const @property dstring clipboard ()
+    {
+        return glfwGetClipboardString(
+                cast(GLFWwindow*)_window ).to!dstring;
+    }
+    /// ditto
+    @property void clipboard ( dstring v )
+    {
+        glfwSetClipboardString(
+                _window, v.to!string.toStringz );
+    }
+
     /// Shows the hidden window.
     void show ()
     {
